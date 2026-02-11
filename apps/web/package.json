@@ -3,11 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "scripts": {
+"scripts": {
     "dev": "vite",
-    "build": "turbo build",
-    "check-types": "tsc --noEmit",
-    "lint": "eslint .",
+    "build": "vite build", 
+    "check:types": "tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -21,7 +20,6 @@
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^4.3.4",
-    "eslint": "^9.15.0",
     "typescript": "5.7.2",
     "vite": "^6.0.0"
   }
