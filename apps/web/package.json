@@ -1,11 +1,11 @@
 {
   "name": "web",
   "private": true,
-  "version": "0.0.0",
+  "version": null,
   "type": "module",
-"scripts": {
+  "scripts": {
     "dev": "vite",
-    "build": "vite build", 
+    "build": "vite build",
     "check:types": "tsc --noEmit",
     "preview": "vite preview"
   },
