@@ -1,10 +1,15 @@
 import { Button } from "@repo/ui/button";
+import { createBrowserRouter, RouterProvider } from "react-router";
+import { AppRoutes } from "./Routes";
+import type React from "react";
+const router = createBrowserRouter(AppRoutes, {
+  basename: "/jobscrolled/",
+});
 
-function App() {
+function App(): React.JSX.Element {
   return (
     <>
-      <h1>Hello world!</h1>
-      <Button appName="jobscrolled">Try me</Button>
+      <RouterProvider router={router} />
     </>
   );
 }

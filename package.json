@@ -16,7 +16,8 @@
     "prettier": "^3.7.4",
     "standard-version": "^9.5.0",
     "turbo": "^2.8.6",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "web": "workspace:*"
   },
   "engines": {
     "node": ">=18"
