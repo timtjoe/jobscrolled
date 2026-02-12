@@ -1,7 +1,8 @@
-import { Button } from "@repo/ui/button";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import { AppRoutes } from "./Routes";
 import type React from "react";
+import { RootCSS } from "./root.css";
+
 const router = createBrowserRouter(AppRoutes, {
   basename: "/jobscrolled/",
 });
@@ -9,6 +10,7 @@ const router = createBrowserRouter(AppRoutes, {
 function App(): React.JSX.Element {
   return (
     <>
+      <RootCSS />
       <RouterProvider router={router} />
     </>
   );
