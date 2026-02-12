@@ -1,6 +1,13 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### [0.1.1](https://github.com/jobscrolled/jobScrolled/compare/v0.1.0...v0.1.1) (2026-02-12)
+
+
+### Bug Fixes
+
+* typos in base url ([89fbcf2](https://github.com/jobscrolled/jobScrolled/commit/89fbcf2adee1cbe17d2668313165f1824722c917))
+
 ## 0.1.0 (2026-02-11)
 
 
