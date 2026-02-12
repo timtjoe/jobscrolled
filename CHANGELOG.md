@@ -1,6 +1,14 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [0.2.0](https://github.com/jobscrolled/jobScrolled/compare/v0.1.2...v0.2.0) (2026-02-12)
+
+
+### Features
+
+* Add LICENSE file ([396548e](https://github.com/jobscrolled/jobScrolled/commit/396548e7a05cf19a77817f717f5bb4de1dd61a1e))
+* Add project readme content ([2520875](https://github.com/jobscrolled/jobScrolled/commit/25208757e97640dc0e7e68f4c2aa0698821183a8))
+
 ### [0.1.2](https://github.com/jobscrolled/jobScrolled/compare/v0.1.1...v0.1.2) (2026-02-12)
 
 ### [0.1.1](https://github.com/jobscrolled/jobScrolled/compare/v0.1.0...v0.1.1) (2026-02-12)
