@@ -5,7 +5,7 @@ Finding remote work can be a nightmare, especially for developers outside of Eur
 
 Beyond a polished interface, JobScrolled is a "worldwide-first" platform. It empowers everyone—regardless of location—to tap into the vast global repository of remote and digital nomad opportunities.
 
-#### 🤖 Agentic AI Features
+#### 🤖 Agentic AI Features [COMING SOON]
 Stop wasting hours on repetitive tasks. JobScrolled uses Agentic AI to streamline your hustle:
 * **One-Click Customization:** Upload a single resume, and our AI tailors it for every specific job.
 * **Smart Applications:** Based on your skills and tech stack, the AI crafts a custom introduction and refines your work experience for each submission.
