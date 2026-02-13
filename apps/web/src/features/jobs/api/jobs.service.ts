@@ -1,7 +1,7 @@
 import apiClient from "./jobs.client";
 
 // Helper to wrap URLs in a CORS proxy
-const withProxy = (url: string) => `https://corsproxy.io/?${encodeURIComponent(url)}`;
+const withProxy = (url: string) => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
 
 // Job Board Fetchers with Proxy
 export const fetchArbeitNow = () => apiClient.get(withProxy("https://arbeitnow.com/api/job-board-api"));
