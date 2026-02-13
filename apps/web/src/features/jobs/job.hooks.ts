@@ -23,11 +23,9 @@ const DEFAULT_FILTERS: JobFilters = {
 };
 
 export function useJobs<T extends BaseJob = JobContract>(
-  // Fallback to DEFAULT_FILTERS enables backward compatibility/empty calls
   filters: JobFilters = DEFAULT_FILTERS, 
 ): UseQueryResult<{ data: T[]; total: number }, Error> {
   return useQuery<JobContract[], Error, { data: T[]; total: number }>({
-    // Include filters.source in the key to ensure cache isolation for specific feeds
     queryKey: [...jobKeys.list(), filters.search, filters.type, filters.source],
     queryFn: async (): Promise<JobContract[]> => {
       const results = await Promise.allSettled([
@@ -41,16 +39,23 @@ export function useJobs<T extends BaseJob = JobContract>(
       const [arbeit, rise, jobicy, remoteOk, hnResults] = results;
       const combinedData: JobContract[] = [];
 
-      if (arbeit.status === "fulfilled")
+      // Logic Note: Proxies like corsproxy.io return the exact JSON.
+      // We check for .data (Axios wrapper) and then the API specific path.
+
+      if (arbeit.status === "fulfilled" && arbeit.value.data?.data) {
         combinedData.push(...arbeit.value.data.data.map(Mappers.mapArbeitNow));
+      }
 
-      if (rise.status === "fulfilled")
+      if (rise.status === "fulfilled" && rise.value.data?.result?.jobs) {
         combinedData.push(...rise.value.data.result.jobs.map(Mappers.mapRise));
+      }
 
-      if (jobicy.status === "fulfilled")
+      if (jobicy.status === "fulfilled" && jobicy.value.data?.jobs) {
         combinedData.push(...jobicy.value.data.jobs.map(Mappers.mapJobicy));
+      }
 
-      if (remoteOk.status === "fulfilled") {
+      if (remoteOk.status === "fulfilled" && Array.isArray(remoteOk.value.data)) {
+        // RemoteOK returns an array where the first item is often legal info, not a job
         const jobsOnly = remoteOk.value.data.filter((i: any) => i.id);
         combinedData.push(...jobsOnly.map(Mappers.mapRemoteOK));
       }
@@ -65,51 +70,46 @@ export function useJobs<T extends BaseJob = JobContract>(
 
       return combinedData;
     },
-    staleTime: 1000 * 60 * 5,
-// features/jobs/useJobs.ts
+    staleTime: 1000 * 60 * 5, // 5 minutes cache
+    select: (data) => {
+      let processed = [...data];
 
-select: (data) => {
-  let processed = [...data];
+      // 1. Filter by Source (Matches the HN Sidebar requirements)
+      if (filters.source) {
+        processed = processed.filter((j) => j.source === filters.source);
+      }
 
-  // 1. FILTER BY SOURCE FIRST (Crucial for the HN Sidebar)
-  // If the user wants only "Hacker News", we discard everything else immediately
-  if (filters.source) {
-    processed = processed.filter((j) => j.source === filters.source);
-  }
+      // 2. Filter by Type
+      if (filters.type !== "all") {
+        processed = processed.filter((j) =>
+          filters.type === "remote" ? j.isRemote : !j.isRemote
+        );
+      }
 
-  // 2. FILTER BY TYPE (Remote/Onsite)
-  if (filters.type !== "all") {
-    processed = processed.filter((j) =>
-      filters.type === "remote" ? j.isRemote : !j.isRemote
-    );
-  }
+      // 3. Filter by Search
+      if (filters.search) {
+        const q = filters.search.toLowerCase();
+        processed = processed.filter(
+          (j) => j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q)
+        );
+      }
 
-  // 3. FILTER BY SEARCH
-  if (filters.search) {
-    const q = filters.search.toLowerCase();
-    processed = processed.filter(
-      (j) => j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q)
-    );
-  }
+      // 4. Sort by Date (Descending)
+      processed.sort((a, b) => 
+        new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
+      );
 
-  // 4. SORT BY DATE (Do this before slicing)
-  processed.sort((a, b) => 
-    new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
-  );
+      const total = processed.length;
 
-  // 5. CALCULATE TOTAL & SLICE
-  const total = processed.length;
-  
-  // Now, if processed only contains HN jobs, 
-  // slice(0, 5) will actually return the top 5 HN jobs.
-  const start = (filters.page - 1) * filters.pageSize;
-  const end = start + filters.pageSize;
-  const sliced = processed.slice(start, end);
+      // 5. Infinite Scroll Logic: 
+      // Since we increment filters.pageSize in the Observer, 
+      // we always slice from 0 to the current pageSize.
+      const sliced = processed.slice(0, filters.pageSize);
 
-  return {
-    data: sliced as unknown as T[],
-    total,
-  };
-}
+      return {
+        data: sliced as unknown as T[],
+        total,
+      };
+    }
   });
 }
