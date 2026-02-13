@@ -4,8 +4,7 @@
   "version": "0.2.0",
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "dev": "turbo run dev -- --host",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "check:types": "turbo run check-types",
     "release:patch": "standard-version --release-as patch",

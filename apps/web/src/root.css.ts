@@ -2,12 +2,11 @@ import { createGlobalStyle } from "styled-components";
 
 export const RootCSS = createGlobalStyle`
   /* Import Google Fonts */
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap');
 
   :root {
     /* Font family variables */
-    --font-base: 'Inter', 'Roboto', 'Segoe UI', 'Helvetica Neue', sans-serif;
-
+--font-base: 'Inter', 'Poppins', 'Open Sans', 'Roboto', 'Segoe UI', Tahoma, sans-serif;
     /* Width variables */
     --width-xs: 390px;
     --width-sm: 430px;
