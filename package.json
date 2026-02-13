@@ -1,6 +1,6 @@
 {
   "name": "jobscrolled",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "devDependencies": {
     "prettier": "^3.7.4",
     "standard-version": "^9.5.0",
