@@ -1,6 +1,13 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [0.4.0](https://github.com/jobscrolled/jobScrolled/compare/v0.3.2...v0.4.0) (2026-02-13)
+
+
+### Features
+
+* Use more robust proxy ([19dd17f](https://github.com/jobscrolled/jobScrolled/commit/19dd17f96e4b4c7e9519116d6bb200b084916784))
+
 ### [0.3.2](https://github.com/jobscrolled/jobScrolled/compare/v0.3.1...v0.3.2) (2026-02-13)
 
 
