@@ -1,0 +1,20 @@
+meta {
+  name: HACKERNEWS
+  type: http
+  seq: 4
+}
+
+get {
+  url: https://hacker-news.firebaseio.com/v0/jobstories.json?print=pretty
+  body: none
+  auth: inherit
+}
+
+params:query {
+  print: pretty
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

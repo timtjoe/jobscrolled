@@ -1,0 +1,20 @@
+meta {
+  name: JOBICY
+  type: http
+  seq: 3
+}
+
+get {
+  url: https://jobicy.com/api/v2/remote-jobs?count=20
+  body: none
+  auth: inherit
+}
+
+params:query {
+  count: 20
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

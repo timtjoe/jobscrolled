@@ -1,19 +1,30 @@
-import { Root } from "@/components/Root";
+// routes.tsx
+import { Root } from "@/components/layout/Root";
+import { PublicLayout } from "@/components/layout";
 import { Homepage, AboutRoutes } from "@/pages";
-
-// Enhance interface
-interface RouteConfig {}
 
 export const AppRoutes = [
   {
     path: "/",
-    element: <Root />,
+    element: <Root />, // The global shell (Providers, etc)
     children: [
       {
-        index: true,
-        element: <Homepage />,
+        element: <PublicLayout />, // The "Main Site" look (Nav + Footer)
+        children: [
+          {
+            index: true,
+            element: <Homepage />,
+          },
+          AboutRoutes,
+        ],
       },
-      AboutRoutes,
+      // Example of improvement: You can now easily add a layout without Nav
+      /* {
+        path: "auth",
+        element: <AuthLayout />, 
+        children: [{ path: "login", element: <Login /> }]
+      } 
+      */
     ],
   },
 ];

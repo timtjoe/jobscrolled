@@ -1,0 +1,24 @@
+meta {
+  name: JOINRISE
+  type: http
+  seq: 2
+}
+
+get {
+  url: https://api.joinrise.io/api/v1/jobs/public?page=1&limit=20&sort=desc&sortedBy=createdAt&jobLoc=
+  body: none
+  auth: inherit
+}
+
+params:query {
+  page: 1
+  limit: 20
+  sort: desc
+  sortedBy: createdAt
+  jobLoc: 
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

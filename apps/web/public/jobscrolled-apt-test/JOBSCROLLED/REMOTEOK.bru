@@ -1,0 +1,26 @@
+meta {
+  name: REMOTEOK
+  type: http
+  seq: 5
+}
+
+get {
+  url: https://remoteok.com/api?api=1
+  body: none
+  auth: inherit
+}
+
+params:query {
+  api: 1
+}
+
+headers {
+  Content-Type: application/json
+  Accept: json
+  user-agent: user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.50
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
