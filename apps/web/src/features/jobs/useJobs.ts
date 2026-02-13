@@ -1,26 +1,44 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import {
   fetchArbeitNow,
   fetchRise,
   fetchJobicy,
   fetchRemoteOK,
+  fetchHackerNewsJobs,
 } from "./api/jobs.service";
 import { Mappers } from "./jobs.mapper";
-import { jobKeys, type JobContract, type JobFilters } from "./job.types";
+import {
+  jobKeys,
+  type BaseJob,
+  type JobContract,
+  type JobFilters,
+} from "./job.types";
 
-// Added optional filters parameter with a default value for backward compatibility
-export const useJobs = (filters: JobFilters = {}) => {
-  return useQuery({
-    queryKey: jobKeys.list(),
+const DEFAULT_FILTERS: JobFilters = {
+  search: "",
+  type: "all",
+  sortBy: "date",
+  page: 1,
+  pageSize: 10,
+};
+
+export function useJobs<T extends BaseJob = JobContract>(
+  // Fallback to DEFAULT_FILTERS enables backward compatibility/empty calls
+  filters: JobFilters = DEFAULT_FILTERS, 
+): UseQueryResult<{ data: T[]; total: number }, Error> {
+  return useQuery<JobContract[], Error, { data: T[]; total: number }>({
+    // Include filters.source in the key to ensure cache isolation for specific feeds
+    queryKey: [...jobKeys.list(), filters.search, filters.type, filters.source],
     queryFn: async (): Promise<JobContract[]> => {
       const results = await Promise.allSettled([
         fetchArbeitNow(),
         fetchRise(),
         fetchJobicy(),
         fetchRemoteOK(),
+        fetchHackerNewsJobs(),
       ]);
 
-      const [arbeit, rise, jobicy, remoteOk] = results;
+      const [arbeit, rise, jobicy, remoteOk, hnResults] = results;
       const combinedData: JobContract[] = [];
 
       if (arbeit.status === "fulfilled")
@@ -37,33 +55,61 @@ export const useJobs = (filters: JobFilters = {}) => {
         combinedData.push(...jobsOnly.map(Mappers.mapRemoteOK));
       }
 
+      if (hnResults.status === "fulfilled") {
+        hnResults.value.forEach((res) => {
+          if (res.status === "fulfilled" && res.value.data) {
+            combinedData.push(Mappers.mapHackerNews(res.value.data));
+          }
+        });
+      }
+
       return combinedData;
     },
     staleTime: 1000 * 60 * 5,
-    // The 'select' transform is the best practice for filtering/sorting cached data
-    select: (data) => {
-      let filtered = [...data];
+// features/jobs/useJobs.ts
 
-      // 1. Handle Search
-      if (filters.search) {
-        const query = filters.search.toLowerCase();
-        filtered = filtered.filter(
-          (job) =>
-            job.title.toLowerCase().includes(query) ||
-            job.company.toLowerCase().includes(query),
-        );
-      }
+select: (data) => {
+  let processed = [...data];
 
-      // 2. Handle Sorting (Newest First by default)
-      filtered.sort((a, b) => {
-        if (filters.sortBy === "title") {
-          return a.title.localeCompare(b.title);
-        }
-        // Default: Sort by date descending
-        return new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime();
-      });
+  // 1. FILTER BY SOURCE FIRST (Crucial for the HN Sidebar)
+  // If the user wants only "Hacker News", we discard everything else immediately
+  if (filters.source) {
+    processed = processed.filter((j) => j.source === filters.source);
+  }
 
-      return filtered;
-    },
+  // 2. FILTER BY TYPE (Remote/Onsite)
+  if (filters.type !== "all") {
+    processed = processed.filter((j) =>
+      filters.type === "remote" ? j.isRemote : !j.isRemote
+    );
+  }
+
+  // 3. FILTER BY SEARCH
+  if (filters.search) {
+    const q = filters.search.toLowerCase();
+    processed = processed.filter(
+      (j) => j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q)
+    );
+  }
+
+  // 4. SORT BY DATE (Do this before slicing)
+  processed.sort((a, b) => 
+    new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
+  );
+
+  // 5. CALCULATE TOTAL & SLICE
+  const total = processed.length;
+  
+  // Now, if processed only contains HN jobs, 
+  // slice(0, 5) will actually return the top 5 HN jobs.
+  const start = (filters.page - 1) * filters.pageSize;
+  const end = start + filters.pageSize;
+  const sliced = processed.slice(start, end);
+
+  return {
+    data: sliced as unknown as T[],
+    total,
+  };
+}
   });
-};
+}
