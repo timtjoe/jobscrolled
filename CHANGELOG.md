@@ -1,6 +1,13 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### [0.3.1](https://github.com/jobscrolled/jobScrolled/compare/v0.3.0...v0.3.1) (2026-02-13)
+
+
+### Bug Fixes
+
+* deployment error ([dc9370d](https://github.com/jobscrolled/jobScrolled/commit/dc9370d25ab083c6e7f3d3afebd079e23d77ccb6))
+
 ## [0.3.0](https://github.com/jobscrolled/jobScrolled/compare/v0.2.0...v0.3.0) (2026-02-13)
 
 
