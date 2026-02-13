@@ -9,7 +9,7 @@ interface ITechnicalError {
 }
 
 export const TechnicalError = ({
-  message = "Technical error occured.",
+  message = "Technical error occurred.",
   onRetry,
   autoRetrySeconds = 5,
 }: ITechnicalError): React.JSX.Element => {
@@ -36,9 +36,9 @@ export const TechnicalError = ({
       <Row>
         <StatusIcon>
           {isRetrying ? (
-            <Icons.refresh size={18} color="var(--bg-black)" />
+            <Icons.refresh size={16} color="var(--text-black)" />
           ) : (
-            <Icons.circle size={18} color="var(--text-red)" strokeWidth={2} />
+            <Icons.circle size={16} color="var(--text-red)" strokeWidth={2.5} />
           )}
         </StatusIcon>
 
@@ -56,24 +56,24 @@ export const TechnicalError = ({
   );
 };
 
-/* --- Styled Components --- */
+/* --- Styled Components (Aligned with RootCSS) --- */
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-md) var(--spacing-lg);
-  min-height: 100px;
+  padding: var(--spacing-lg) 0;
   width: 100%;
 `;
 
 const Row = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: var(--bg-soft);
-  padding: 10px 16px;
-  border-radius: 14px; /* Slightly softer squircle for the inline row */
+  gap: var(--spacing-sm);
+  background: var(--bg-grey); /* Using your variable */
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm); /* Using your variable */
 `;
 
 const StatusIcon = styled.div`
@@ -81,23 +81,31 @@ const StatusIcon = styled.div`
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  
+  /* Simple spin animation for the refresh icon */
+  svg {
+    transition: transform 0.3s ease;
+  }
 `;
 
 const ErrorMessage = styled.p`
-  color: var(--text-main);
-  font-size: 0.9rem;
+  color: var(--text-black);
+  font-family: var(--font-base);
+  font-size: var(--font-sm);
   font-weight: 500;
   margin: 0;
   white-space: nowrap;
 `;
 
 const CountdownText = styled.span`
-  font-size: 0.8rem;
+  font-family: var(--font-base);
+  font-size: var(--font-xs);
   color: var(--text-muted);
   white-space: nowrap;
 
   strong {
-    color: var(--text-bold);
-    font-variant-numeric: tabular-nums;
+    color: var(--text-black);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums; /* Keeps numbers from jumping */
   }
 `;

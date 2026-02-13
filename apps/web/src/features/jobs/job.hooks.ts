@@ -6,7 +6,7 @@ import {
   fetchRemoteOK,
   fetchHackerNewsJobs,
 } from "./api/jobs.service";
-import { Mappers } from "./jobs.mapper";
+import { Mappers } from "./job.mappers";
 import {
   jobKeys,
   type BaseJob,

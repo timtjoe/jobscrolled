@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import { useJobs } from '../useJobs';
+import React from "react";
+import styled from "styled-components";
+import { useJobs } from "../job.hooks";
 import { ErrorBoundary, TechnicalError } from "@/components/errors";
 import type { JobContract } from "../job.types";
 import { JobSkeleton } from "@/components/Skeleton";
@@ -26,34 +26,38 @@ const HNMiniCard: React.FC<{ job: JobContract }> = ({ job }) => (
  * 2. Inner Content
  */
 const HNContent: React.FC = () => {
-const { data, isLoading, isError, refetch } = useJobs({
+  const { data, isLoading, isError, refetch } = useJobs({
     search: "",
     type: "all",
     sortBy: "date",
     page: 1,
     pageSize: 10,
-    source: "Hacker News"
+    source: "Hacker News",
   });
 
   // Sidebar uses fewer items
   if (isLoading) return <JobSkeleton count={5} />;
 
-  if (isError) return <TechnicalError message="HN Offline" onRetry={() => refetch()} />;
+  if (isError)
+    return <TechnicalError message="HN Offline" onRetry={() => refetch()} />;
 
   const { data: rawJobs = [] } = data || {};
 
   // Sort: Remote First, then Date
-  const sortedJobs = [...rawJobs].sort((a, b) => {
-    if (a.isRemote && !b.isRemote) return -1;
-    if (!a.isRemote && b.isRemote) return 1;
-    return 0; // Maintain date sort from hook
-  }).slice(0, 6); // Display top 6
+  const sortedJobs = [...rawJobs]
+    .sort((a, b) => {
+      if (a.isRemote && !b.isRemote) return -1;
+      if (!a.isRemote && b.isRemote) return 1;
+      return 0; // Maintain date sort from hook
+    })
+    .slice(0, 6); // Display top 6
 
-  if (sortedJobs.length === 0) return <EmptyText>No current jobs found.</EmptyText>;
+  if (sortedJobs.length === 0)
+    return <EmptyText>No current jobs found.</EmptyText>;
 
   return (
     <List>
-      {sortedJobs.map(job => (
+      {sortedJobs.map((job) => (
         <HNMiniCard key={job.id} job={job} />
       ))}
     </List>
@@ -99,7 +103,9 @@ const MediaObject = styled.a`
   color: inherit;
   padding: 4px 0;
   transition: opacity 0.2s;
-  &:hover { opacity: 0.7; }
+  &:hover {
+    opacity: 0.7;
+  }
 `;
 
 const JobTitle = styled.h4`
@@ -117,8 +123,13 @@ const MetaLine = styled.div`
   font-size: 0.75rem;
   color: #6a737d;
 
-  .company { font-weight: 500; color: #444; }
-  .dot { color: #ccc; }
+  .company {
+    font-weight: 500;
+    color: #444;
+  }
+  .dot {
+    color: #ccc;
+  }
 `;
 
 const RemoteBadge = styled.span`
@@ -131,5 +142,11 @@ const RemoteBadge = styled.span`
   text-transform: uppercase;
 `;
 
-const LoadingText = styled.p` font-size: 0.8rem; color: #999; `;
-const EmptyText = styled.p` font-size: 0.8rem; color: #999; `;
+const LoadingText = styled.p`
+  font-size: 0.8rem;
+  color: #999;
+`;
+const EmptyText = styled.p`
+  font-size: 0.8rem;
+  color: #999;
+`;
