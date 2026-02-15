@@ -94,10 +94,16 @@ export function useJobs<T extends BaseJob = JobContract>(
         );
       }
 
-      // 4. Sort by Date (Descending)
-      processed.sort((a, b) => 
-        new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
-      );
+      // 4. NEW: Remote-first sorting - Remote jobs ALWAYS come first, then date sort within groups
+      processed.sort((a, b) => {
+        // Remote jobs (isRemote: true) always come before non-remote
+        if (a.isRemote !== b.isRemote) {
+          return b.isRemote ? 1 : -1; // true remote first (1), false remote second (-1)
+        }
+        
+        // Within same remote status, sort by date descending
+        return new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime();
+      });
 
       const total = processed.length;
 
