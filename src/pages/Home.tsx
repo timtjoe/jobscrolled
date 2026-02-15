@@ -1,109 +1,50 @@
-// pages/Homepage.tsx
 import React from "react";
-import styled from "styled-components";
 import { JobList } from "@/features/jobs";
-import {NewsList} from "@/features/news";
 
 export const Homepage: React.FC = () => {
   return (
-    <PageContainer>
-      <ContentGrid>
-        {/* Main Job List */}
-        <MainContent>
-          <JobList />
-        </MainContent>
+    <main className="layout-grid">
+      {/* COLUMN 1: Left (Empty/Minimal) */}
+      <aside className="col-sidebar" />
 
-        {/* Sidebar with NewsList and Developer Portfolio */}
-        <Sidebar>
-          {/* Job Market News - TOP */}
-          {/* <NewsList /> */}
-          
-          {/* Developer Portfolio - BELOW */}
-          <PortfolioSection>
-            <MiniTitle>Developer Portfolio</MiniTitle>
-            <BioText>
-              Architecting interfaces that transform complex APIs into seamless 
-              visual experiences. 5+ years building fast, accessible UIs. 
-              Currently open to <strong>Frontend Engineering</strong> roles.
-            </BioText>
-            <ContactLinks>
-              <a href="mailto:timtjoe@gmail.com">Email</a>
-              <span>•</span>
-              <a href="https://wa.me/+231770934646" target="_blank">WhatsApp</a>
-              <span>•</span>
-              <a href="https://github.com/timtjoe" target="_blank">GitHub</a>
-            </ContactLinks>
-          </PortfolioSection>
-        </Sidebar>
-      </ContentGrid>
-    </PageContainer>
+      {/* COLUMN 2: Main Feed (Infinite Scroll Area) */}
+      <section className="col-main">
+        <div className="min-h-screen">
+          <JobList />
+        </div>
+      </section>
+
+      {/* COLUMN 3: Developer Portfolio */}
+      <aside className="col-right">
+        <div className="p-xl space-y-6">
+          <section>
+            <h2 className="text-[10px] font-800 text-gray-400 uppercase tracking-widest mb-3">
+              Developer
+            </h2>
+            <p className="text-xs leading-relaxed text-muted">
+              Architecting interfaces that transform complex APIs into seamless
+              visual experiences.{" "}
+              <strong className="text-black">Frontend Engineering</strong>.
+            </p>
+
+            <div className="flex flex-col gap-2 mt-6">
+              <a
+                href="mailto:timtjoe@gmail.com"
+                className="text-xs font-500 hover:text-primary"
+              >
+                Email
+              </a>
+              <a
+                href="https://github.com/timtjoe"
+                target="_blank"
+                className="text-xs font-500 hover:text-secondary"
+              >
+                GitHub
+              </a>
+            </div>
+          </section>
+        </div>
+      </aside>
+    </main>
   );
 };
-
-// ✅ FIXED: 900px MAX constraint respected
-const ContentGrid = styled.div`
-  display: grid;
-  grid-template-columns: 580px 280px;  /* 580 + 280 + 40px gap = 900px */
-  gap: 40px;                           /* Perfect spacing within 900px */
-  align-items: flex-start;
-`;
-
-const Sidebar = styled.aside`
-  display: flex;
-  flex-direction: column;
-  gap: 48px;                    /* ✅ Ample spacing for NewsList + Portfolio */
-  
-  /* ✅ NO STICKY - Normal document flow */
-  position: static;
-  height: auto;
-`;
-
-const PageContainer = styled.div`
-  max-width: 900px;             /* ✅ YOUR SPECIFIED MAX */
-  margin: 0 auto;
-  padding: var(--spacing-xl) var(--spacing-lg);
-`;
-
-const MainContent = styled.main`
-  min-width: 0;
-`;
-
-const PortfolioSection = styled.section`
-  padding-bottom: var(--spacing-xl);
-  border-bottom: 1px solid var(--border-light);
-`;
-
-const MiniTitle = styled.h2`
-  font-size: var(--font-xxs);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--text-grey);
-  margin-bottom: var(--spacing-md);
-`;
-
-const BioText = styled.p`
-  font-size: var(--font-sm);
-  line-height: 1.6;
-  color: var(--text-muted);
-  margin-bottom: var(--spacing-lg);
-  
-  strong {
-    color: var(--text-black);
-  }
-`;
-
-const ContactLinks = styled.div`
-  display: flex;
-  gap: var(--spacing-sm);
-  font-size: var(--font-xs);
-  
-  a {
-    color: var(--text-black);
-    font-weight: 500;
-    &:hover { border-bottom: 1px solid var(--text-black); }
-  }
-
-  span { color: var(--border-gray); }
-`;
-
-// ✅ MOBILE - SIMPLIFIED (stacks naturally within 900px)
