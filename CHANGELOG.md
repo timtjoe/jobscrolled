@@ -1,6 +1,21 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+### [0.4.1](https://github.com/timtjoe/jobscrolled/compare/v0.4.0...v0.4.1) (2026-02-15)
+
+
+### Features
+
+* job card ([1e2c0f7](https://github.com/timtjoe/jobscrolled/commit/1e2c0f72a24266f6e94dd3c7fe23e36e27d9606e))
+* remove turborepo ([59cf73b](https://github.com/timtjoe/jobscrolled/commit/59cf73bd55ea1e7d0006d11cfede8bee18b70cd2))
+* sort job list by remote first ([d568887](https://github.com/timtjoe/jobscrolled/commit/d56888779aff8e959a66f40b8ffc4c0eb40ce282))
+
+
+### Bug Fixes
+
+* import in global styles ([65d45db](https://github.com/timtjoe/jobscrolled/commit/65d45dbe084ad2712e50825ca23ea109f9d1c113))
+* job services fetch proxy ([8a27296](https://github.com/timtjoe/jobscrolled/commit/8a272964d9456d866d8e1046254e22b2b896b355))
+
 ## [0.4.0](https://github.com/jobscrolled/jobScrolled/compare/v0.3.2...v0.4.0) (2026-02-13)
 
 
