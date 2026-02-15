@@ -20,18 +20,16 @@ export const Icons = {
   cloud: Vendor.Cloud,
   circle: Vendor.AlertCircle,
   refresh: Vendor.RefreshCw,
-
-  // Directions
   arrow_right: Vendor.ArrowRight,
   arrow_left: Vendor.ArrowLeft,
   arrow_up: Vendor.ArrowUp,
   arrow_down: Vendor.ArrowDown,
-
-  // Social Engagement
   heart: Vendor.Heart,
   comment: Vendor.MessageCircle,
   share: Vendor.Share2,
   send: Vendor.Send,
-
+  more_vertical: Vendor.MoreVertical,    
+  eye_off: Vendor.EyeOff,                
+  flag: Vendor.Flag,                     
   bluesky: CustomIcons.Bluesky,
 };

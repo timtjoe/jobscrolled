@@ -83,4 +83,57 @@ export const RootStyles = createGlobalStyle`
       font-size: var(--font-sm);
     }
   }
+
+  /* globals.css or App.css */
+.vaul-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+}
+
+.vaul-content {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  max-height: 90vh;
+  overflow: hidden;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+}
+
+.vaul-header {
+  padding: 24px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.vaul-close {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  color: #6b7280;
+  
+  &:hover {
+    background: #f3f4f6;
+  }
+}
+
+.vaul-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.vaul-footer {
+  padding: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
 `;
