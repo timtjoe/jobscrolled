@@ -5,12 +5,10 @@ on:
     branches: [master]
     tags:
       - 'v*'
-    paths:
-      # Trigger if anything in the web app OR shared packages change
-      - 'apps/web/**'
-      - 'packages/**'
-      - 'package.json'
-      - 'bun.lockb'
+    # Simplified: Trigger on any change in the root project
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
 
 concurrency:
   group: "pages"
@@ -36,14 +34,15 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Build Web App
-        run: bun run build --filter=web
-        # env:
+      - name: Build App
+        # Removed --filter=web since we are now in the root
+        run: bun run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './apps/web/dist'
+          # Path updated from ./apps/web/dist to just ./dist
+          path: './dist'
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -1,38 +1,45 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# Dependencies
-node_modules
+# --- Standard Dependencies ---
+node_modules/
 .pnp
 .pnp.js
 
-# Local env files
+# --- Bun Specific ---
+# Bun creates these for local caching and lockfile integrity
+.bun/
+bun.lockb
+# If you decide to commit the lockfile, remove the line above (recommended for apps)
+
+# --- Environment / Secrets ---
+# Always ignore local environment variables
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
+*.pem
+*.key
 
-# Testing
-coverage
+# --- Build & Output ---
+# Vite production build output
+dist/
+# If you use Vite's preview or server caches
+.vite/
+# Coverage reports from Vitest
+coverage/
 
-# Turbo
-.turbo
-
-# Vercel
-.vercel
-
-# Build Outputs
-.next/
-out/
-build
-dist
-
-
-# Debug
+# --- Debug & Logs ---
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+bun-debug.log*
 
-# Misc
+# --- System & IDE ---
 .DS_Store
-*.pem
+Thumbs.db
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

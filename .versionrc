@@ -1,26 +1,42 @@
 {
   "header": "# Changelog\n\nAll notable changes to this project will be documented in this file.",
   "types": [
-    { "type": "feat", "section": "Features", "bump": "minor" },
-    { "type": "fix", "section": "Bug Fixes", "bump": "patch" },
-    { "type": "perf", "section": "Performance Improvements", "bump": "patch" },
-    { "type": "refactor", "section": "Code Refactoring", "bump": "patch" },
-    { "type": "docs", "section": "Documentation", "bump": "patch" },
-    { "type": "build", "section": "Build System", "bump": "patch" },
-    { "type": "ci", "section": "Continuous Integration", "hidden": true },
-    { "type": "chore", "hidden": true }
+    {
+      "type": "feat",
+      "section": "Features",
+      "bump": "minor"
+    },
+    {
+      "type": "fix",
+      "section": "Bug Fixes",
+      "bump": "patch"
+    },
+    {
+      "type": "main",
+      "section": "Core Updates",
+      "bump": "patch"
+    },
+    {
+      "type": "chore",
+      "section": "Miscellaneous",
+      "bump": "patch"
+    }
   ],
-  "commitUrlFormat": "https://github.com/jobscrolled/jobScrolled/commit/{{hash}}",
-  "compareUrlFormat": "https://github.com/jobscrolled/jobScrolled/compare/{{previousTag}}...{{currentTag}}",
-  "releaseCommitMessageFormat": "chore(release): {{currentTag}}",
+  "commitUrlFormat": "https://github.com/timtjoe/jobscrolled/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/timtjoe/jobscrolled/compare/{{previousTag}}...{{currentTag}}",
+  "releaseCommitMessageFormat": "chore(release): {{currentTag}} [skip ci]",
   "bumpFiles": [
-    { "filename": "package.json", "type": "json" },
-    { "filename": "apps/web/package.json", "type": "json" },
-    { "filename": "apps/api/package.json", "type": "json" },
-    { "filename": "packages/ui/package.json", "type": "json" },
-    { "filename": "packages/typescript-config/package.json", "type": "json" }
+    {
+      "filename": "package.json",
+      "type": "json"
+    }
   ],
-  "packageFiles": [{ "filename": "package.json", "type": "json" }],
+  "packageFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    }
+  ],
   "scripts": {
     "posttag": "git push --follow-tags origin master"
   }
