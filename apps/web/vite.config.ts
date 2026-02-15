@@ -9,6 +9,13 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true,
+    proxy: {
+      '/api/arbeitnow': {
+        target: 'https://www.arbeitnow.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/arbeitnow/, '/api/job-board-api')
+      }
+    }
   },
   build: {
     outDir: 'dist',
