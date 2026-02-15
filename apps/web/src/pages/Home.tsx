@@ -1,7 +1,8 @@
 // pages/Homepage.tsx
 import React from "react";
 import styled from "styled-components";
-import { JobList, HackerNewsFeed } from "@/features/jobs";
+import { JobList } from "@/features/jobs";
+import {NewsList} from "@/features/news";
 
 export const Homepage: React.FC = () => {
   return (
@@ -12,8 +13,12 @@ export const Homepage: React.FC = () => {
           <JobList />
         </MainContent>
 
-        {/* Sidebar with Developer Info and HN Feed */}
+        {/* Sidebar with NewsList and Developer Portfolio */}
         <Sidebar>
+          {/* Job Market News - TOP */}
+          {/* <NewsList /> */}
+          
+          {/* Developer Portfolio - BELOW */}
           <PortfolioSection>
             <MiniTitle>Developer Portfolio</MiniTitle>
             <BioText>
@@ -29,65 +34,39 @@ export const Homepage: React.FC = () => {
               <a href="https://github.com/timtjoe" target="_blank">GitHub</a>
             </ContactLinks>
           </PortfolioSection>
-
-          <HackerNewsFeed />
         </Sidebar>
       </ContentGrid>
     </PageContainer>
   );
 };
 
-// pages/Homepage.tsx
-
+// ✅ FIXED: 900px MAX constraint respected
 const ContentGrid = styled.div`
   display: grid;
-  grid-template-columns: 600px 300px;
-  gap: 60px;
+  grid-template-columns: 580px 280px;  /* 580 + 280 + 40px gap = 900px */
+  gap: 40px;                           /* Perfect spacing within 900px */
   align-items: flex-start;
-
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr; /* Stack columns */
-    width: 100%;
-    gap: 40px;
-  }
 `;
 
 const Sidebar = styled.aside`
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: 48px;                    /* ✅ Ample spacing for NewsList + Portfolio */
   
-  /* Sticky only on Desktop */
-  @media (min-width: 901px) {
-    position: sticky;
-    top: 88px;
-    height: fit-content;
-  }
-
-  @media (max-width: 900px) {
-    position: static; /* Normal flow on mobile */
-    order: 2; /* Ensure it follows the job list */
-    padding-top: var(--spacing-xl);
-    border-top: 1px solid var(--border-light);
-  }
+  /* ✅ NO STICKY - Normal document flow */
+  position: static;
+  height: auto;
 `;
 
-// --- Styled Components ---
-
-
 const PageContainer = styled.div`
-  max-width: 900px; /* Your total width requirement */
+  max-width: 900px;             /* ✅ YOUR SPECIFIED MAX */
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-lg);
 `;
 
-
 const MainContent = styled.main`
   min-width: 0;
-  /* This will scroll naturally as part of the body */
 `;
-
-
 
 const PortfolioSection = styled.section`
   padding-bottom: var(--spacing-xl);
@@ -126,3 +105,5 @@ const ContactLinks = styled.div`
 
   span { color: var(--border-gray); }
 `;
+
+// ✅ MOBILE - SIMPLIFIED (stacks naturally within 900px)

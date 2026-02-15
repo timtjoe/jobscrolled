@@ -2,7 +2,7 @@
 import React from "react";
 import { Outlet } from "react-router";
 import styled from "styled-components";
-import { AppBar } from "./AppBar";
+import { AppBar } from "../appbar/AppBar";
 
 export const PublicLayout: React.FC = () => {
   return (

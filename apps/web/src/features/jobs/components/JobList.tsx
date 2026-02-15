@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from "react";
+import React, { useEffect, useRef, useCallback, useMemo } from "react";
 import styled from "styled-components";
 import { useAtom } from "jotai";
 import { jobFiltersAtom } from "../job.stores";
@@ -9,6 +9,28 @@ import { JobSkeleton } from "@/components/Skeleton";
 import { Toaster, toast } from "sonner";
 import type { JobContract } from "../job.types";
 import JobDetailModal from "./JobModal";
+
+// ✅ NEW: FilterControls Component (MOVED from AppBar)
+const FilterControls: React.FC = () => {
+  const [filters, setFilters] = useAtom(jobFiltersAtom);
+
+  const handleType = (type: typeof filters.type) =>
+    setFilters((prev) => ({ ...prev, type, page: 1 }));
+
+  return (
+    <FilterChips>
+      {(["all", "remote", "onsite"] as const).map((t) => (
+        <ChipBtn
+          key={t}
+          $active={filters.type === t}
+          onClick={() => handleType(t)}
+        >
+          {t.toUpperCase()}
+        </ChipBtn>
+      ))}
+    </FilterChips>
+  );
+};
 
 const ListContent: React.FC = () => {
   const [filters, setFilters] = useAtom(jobFiltersAtom);
@@ -56,10 +78,19 @@ const ListContent: React.FC = () => {
     );
   }, []);
 
+  const jobHandlers = useMemo(() => ({
+    onJobClick: openJobModal,
+    onCompanyClick: handleCompanyClick,
+  }), [openJobModal, handleCompanyClick]);
+
   useEffect(() => {
     const option = { root: null, rootMargin: "200px", threshold: 0 };
     const observer = new IntersectionObserver(handleObserver, option);
-    if (loaderRef.current) observer.observe(loaderRef.current);
+    
+    if (loaderRef.current) {
+      observer.observe(loaderRef.current);
+    }
+
     return () => observer.disconnect();
   }, [handleObserver]);
 
@@ -70,17 +101,16 @@ const ListContent: React.FC = () => {
 
   return (
     <>
+      {/* ✅ FILTERS MOVED HERE - FEATURE ENCAPSULATED */}
+      <FilterControls />
+      
       <ResultCount>{total} results found</ResultCount>
       <Grid>
         {jobList.map((job) => (
-          // ✅ FIXED: New handlers prop structure
           <JobCard 
             key={job.id} 
             job={job}
-            handlers={{
-              onJobClick: openJobModal,
-              onCompanyClick: handleCompanyClick,
-            }}
+            handlers={jobHandlers}
           />
         ))}
       </Grid>
@@ -109,39 +139,41 @@ export const JobList: React.FC = () => {
   );
 };
 
-// Styled Components (unchanged)
-const ListContainer = styled.div`
-  width: 100%;
-`;
-
-const Grid = styled.div`
+// ✅ ADDED Filter Styles (from AppBar)
+const FilterChips = styled.div`
   display: flex;
-  flex-direction: column;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xl);
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--border-light);
 `;
 
-const ObserverTarget = styled.div`
-  padding: var(--spacing-xl) 0;
-  min-height: 50px;
-`;
-
-const ResultCount = styled.div`
+const ChipBtn = styled.button<{ $active: boolean }>`
+  height: 32px;
+  padding: 0 var(--spacing-md);
+  border: 1px solid ${(p) => (p.$active ? "var(--text-black)" : "var(--border-light)")};
+  border-radius: 16px;
+  background: ${(p) => (p.$active ? "var(--text-black)" : "var(--bg-white)")};
+  color: ${(p) => (p.$active ? "var(--bg-white)" : "var(--text-black)")};
   font-size: var(--font-xs);
-  color: var(--text-grey);
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: var(--spacing-lg);
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  
+  &:hover {
+    border-color: var(--text-black);
+  }
+  
+  &:active {
+    transform: translateY(1px);
+  }
 `;
 
-const StatusText = styled.div`
-  padding: var(--spacing-xl) 0;
-  color: var(--text-muted);
-  font-size: var(--font-sm);
-`;
-
-const EmptyState = styled.div`
-  padding: 60px 0;
-  text-align: center;
-  color: var(--text-muted);
-  border-top: 1px solid var(--border-light);
-`;
+// Existing styles unchanged...
+const ListContainer = styled.div` width: 100%; `;
+const Grid = styled.div` display: flex; flex-direction: column; gap: var(--spacing-md); `;
+const ObserverTarget = styled.div` padding: var(--spacing-xl) 0; min-height: 50px; `;
+const ResultCount = styled.div` font-size: var(--font-xs); color: var(--text-grey); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--spacing-lg); `;
+const StatusText = styled.div` padding: var(--spacing-xl) 0; color: var(--text-muted); font-size: var(--font-sm); `;
+const EmptyState = styled.div` padding: 60px 0; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border-light); `;
