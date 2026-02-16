@@ -145,7 +145,7 @@ const MetaItem = styled.div`
 
 const Footer = styled.div`
   width: 100%;
-  margin-top: auto;
+  /* margin-top: auto; */
   padding: 24px;
   /* Removed border-top */
   display: flex;

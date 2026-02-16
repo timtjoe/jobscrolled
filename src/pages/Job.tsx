@@ -119,6 +119,7 @@ const Grid = styled.div`
 
 const HeaderMobile = styled.header`
   display: none;
+
   @media (max-width: 1024px) {
     display: flex;
     position: sticky;
@@ -126,8 +127,9 @@ const HeaderMobile = styled.header`
     z-index: 110;
     background: var(--bg-overlay);
     backdrop-filter: blur(12px);
-    padding: 12px 16px;
+    padding: var(--spacing-md) var(--spacing-sm);
     border-bottom: 1px solid var(--border-dim);
+
     .back-btn {
       display: flex;
       align-items: center;
@@ -139,29 +141,27 @@ const HeaderMobile = styled.header`
 `;
 
 const Content = styled.div`
-  padding: 40px;
-  @media (min-width: 1025px) {
-    height: 100vh;
-    overflow-y: auto;
-    border-right: 1px solid var(--border-dim);
-  }
-  @media (max-width: 1024px) {
-    padding: 24px;
-  }
-  `;
+  padding: var(--spacing-md);
+
+  height: 100vh;
+  overflow-y: auto;
+  border-right: 1px solid var(--border-dim);
+`;
 
 const Sidebar = styled.aside`
-  /* On desktop, the container itself doesn't scroll, its child does */
+  /* Desktop Layout */
   @media (min-width: 1025px) {
     height: 100vh;
-    overflow: hidden; 
-    border-right: 1px solid var(--border-dim);
+    border-right: 1px solid var(--border-dim); 
+    position: relative;
+    background: var(--bg-black);
+    display: flex;
+    flex-direction: column;
   }
 
   @media (max-width: 1024px) {
     padding: 24px;
-    border-top: 1px solid var(--border-dim);
-    margin-bottom: 20px;
+    margin-bottom: 50px;
   }
 `;
 
@@ -169,15 +169,13 @@ const StickyWrapper = styled.div`
   @media (min-width: 1025px) {
     position: sticky;
     top: 0;
-    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
     overflow-y: auto;
-    padding: 0; /* Padding is usually handled inside Company/Suggestions */
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    scrollbar-width: none; 
-    -ms-overflow-style: none;
+    &::-webkit-scrollbar { display: none; }
+    scrollbar-width: none;
   }
 `;
 
