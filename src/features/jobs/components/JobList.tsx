@@ -48,17 +48,16 @@ const ListContent: React.FC = () => {
         {jobList.map((job: any) => (
           <JobCard key={job.id} job={job} />
         ))}
-        
+
         {!isLoading && jobList.length === 0 && (
           <EmptyState>No jobs found matching your criteria.</EmptyState>
         )}
       </List>
 
-      {/* This ref is always at the bottom */}
       <ObserverTarget ref={loaderRef}>
         {isFetching && jobList.length > 0 && (
-          <div style={{ padding: '20px' }}>
-             <JobSkeleton count={2} />
+          <div style={{ padding: "16px" }}>
+            <JobSkeleton count={2} />
           </div>
         )}
       </ObserverTarget>
@@ -83,13 +82,13 @@ const List = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 100vw; 
+  max-width: 100vw;
 `;
 const EmptyState = styled.div`
   padding: 40px 24px;
   text-align: center;
   color: var(--text-muted);
-  font-size: 14px;
+  font-size: var(--font-sm);
   font-weight: 500;
 `;
 

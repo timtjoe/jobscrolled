@@ -9,7 +9,6 @@ interface JobCardProps {
 }
 
 export const JobCard: React.FC<JobCardProps> = ({ job }) => {
-  // Track if the image fails to load
   const [imgError, setImgError] = useState(false);
 
   const companyName = job?.company || "Unknown Company";
@@ -39,9 +38,8 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
           <Title>{job.title || "Untitled Position"}</Title>
 
           <MetaRow>
-            <CompanyName>{companyName}</CompanyName>
-            <Dot>•</Dot>
-            <Location>{job.location || "Global"}</Location>
+            <CompanyName>{companyName}</CompanyName> 
+            <Location>, {job.location || "Global"}</Location>
           </MetaRow>
 
           <PerksRow>
@@ -128,6 +126,7 @@ const Title = styled.h3`
   font-weight: 700;
   color: var(--text-sub);
   margin-bottom: 2px;
+  letter-spacing: 0.06em;
 
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -174,7 +173,6 @@ const PerksRow = styled.div`
   overflow: hidden;
 
   .salary {
-    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -183,8 +181,7 @@ const PerksRow = styled.div`
 `;
 
 const WorkBadge = styled.span<{ $isRemote: boolean }>`
-  color: ${(p) => (p.$isRemote ? "var(--text-link)" : "var(--text-muted)")};
-  font-weight: 600;
+  color: ${(p) => (p.$isRemote ? "var(--text-muted)" : "var(--text-muted)")};
 `;
 
 const Dot = styled.span`

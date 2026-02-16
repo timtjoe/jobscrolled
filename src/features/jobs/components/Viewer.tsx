@@ -13,13 +13,9 @@ interface ViewerProps {
 }
 
 export const Viewer: React.FC<ViewerProps> = ({ job, isLoading }) => {
-  // 1. Show skeleton during fetch
   if (isLoading) return <ViewerSkeleton />;
-
-  // 2. Return empty screen if no job is selected/found
   if (!job) return null;
 
-  // 3. Process Description
   const content = useMemo(() => {
     if (!job.description) return null;
     const sanitized = DOMPurify.sanitize(
@@ -27,45 +23,70 @@ export const Viewer: React.FC<ViewerProps> = ({ job, isLoading }) => {
         .replace(/Please mention the word.*$/i, "")
         .replace(/#\w+=/g, ""),
       {
-        ALLOWED_TAGS: ["p", "strong", "em", "b", "i", "ul", "ol", "li", "a", "h1", "h2", "h3", "br"],
+        ALLOWED_TAGS: [
+          "p",
+          "strong",
+          "em",
+          "b",
+          "i",
+          "ul",
+          "ol",
+          "li",
+          "a",
+          "h1",
+          "h2",
+          "h3",
+          "br",
+        ],
         ALLOWED_ATTR: ["href"],
-      }
+      },
     );
     return parse(sanitized);
   }, [job.description]);
 
-  // 4. Handle Salary (Dynamic fallback)
   const salaryText = useMemo(() => {
     if (!job.salary?.min || !job.salary?.max) return null;
     const { min, max, currency } = job.salary;
     return `${formatCompactNumber(min)} - ${formatCompactNumber(max)} ${currency || "USD"}`;
   }, [job.salary]);
 
-  // 5. Handle Employment Type (String or Array)
   const typeText = useMemo(() => {
     if (!job.type) return null;
     return Array.isArray(job.type) ? job.type.join(", ") : job.type;
   }, [job.type]);
 
   return (
-    <ErrorBoundary fallback={<TechnicalError onRetry={() => window.location.reload()} />}>
+    <ErrorBoundary
+      fallback={<TechnicalError onRetry={() => window.location.reload()} />}
+    >
       <Root>
-        <header>
-          <h1>{job.title}</h1>
-          {job.location && <p className="loc">{job.location}</p>}
-          
-          <div className="perks">
-            {salaryText && <span className="bold">{salaryText}</span>}
-            {job.isRemote && <span className="blue">Remote</span>}
+        <Header>
+          <Title>{job.title}</Title>
+
+          <MetaRow>
+            <CompanyName>{job.company}</CompanyName>
+            <Location>, {job.location || "Global"}</Location>
+            <Dot>•</Dot>
+            <WorkBadge $isRemote={!!job.isRemote}>
+              {job.isRemote ? "Remote" : "On-site"}
+            </WorkBadge>
+          </MetaRow>
+
+          <PerksRow>
+            {salaryText && (
+              <>
+                <span className="salary">{salaryText}</span>
+                <Dot>•</Dot>
+              </>
+            )}
             {typeText && <span>{typeText}</span>}
-          </div>
-        </header>
+          </PerksRow>
+        </Header>
 
         {content && (
-          <section>
-            {/* Header only shows if content exists */}
-            <div className="html">{content}</div>
-          </section>
+          <DescriptionSection>
+            <HtmlContent>{content}</HtmlContent>
+          </DescriptionSection>
         )}
       </Root>
     </ErrorBoundary>
@@ -75,86 +96,126 @@ export const Viewer: React.FC<ViewerProps> = ({ job, isLoading }) => {
 /* --- STYLES --- */
 
 const Root = styled.div`
-  padding: 40px;
+  padding: var(--spacing-md);
   background: var(--bg-black);
   animation: fadeIn 0.3s ease-in-out;
 
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 768px) {
-    padding: 24px 20px;
+    padding: var(--spacing-sm);
+  }
+`;
+
+const Header = styled.header`
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--border-dim);
+`;
+
+const Title = styled.h1`
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text-sub);
+  margin-bottom: 12px;
+  line-height: 26px;
+  letter-spacing: 0.02em;
+`;
+
+const MetaRow = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: var(--font-md);
+  line-height: 20px;
+  color: var(--text-muted);
+`;
+
+const CompanyName = styled.span`
+  color: var(--text-sub);
+`;
+
+const Location = styled.span`
+  color: var(--text-muted);
+`;
+
+const PerksRow = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: var(--font-sm);
+  line-height: 16px;
+  color: var(--text-main);
+  margin-top: var(--spacing-sm);
+  
+  .salary {
+    color: var(--text-main);
+    font-weight: normal;
+    max-width: 140px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`;
+
+const WorkBadge = styled.span<{ $isRemote: boolean }>`
+  color: ${(p) => (p.$isRemote ? "var(--text-lavender)" : "var(--text-muted)")};
+`;
+
+const Dot = styled.span`
+  margin: 0 8px;
+  color: var(--border-dim);
+  font-size: 10px;
+  flex-shrink: 0;
+`;
+
+const DescriptionSection = styled.section`
+  padding-top: var(--spacing-md);
+`;
+
+const HtmlContent = styled.div`
+  font-size: var(--font-md);
+  line-height: 24px;
+  color: var(--text-sub);
+
+  p {
+    margin-bottom: var(--spacing-md);
   }
 
-  header {
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--border-dim);
-    
-    h1 {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--text-sub);
-      margin-bottom: 6px;
-      line-height: 1.3;
-    }
-    
-    .loc {
-      font-size: 15px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-    }
-    
-    .perks {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--text-muted);
-      
-      .bold { font-weight: 600; color: var(--text-main); }
-      .blue { color: var(--text-link); font-weight: 600; }
-      
-      /* Logic for dots between available perks */
-      span:not(:last-child)::after {
-        content: "•";
-        margin-left: 10px;
-        color: var(--border-dim);
-      }
+  ul,
+  ol {
+    padding-left: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    li {
+      margin-bottom: var(--spacing-md);
     }
   }
 
-  section {
-    padding-top: 32px;
-    
-    .html {
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--text-main);
+  strong,
+  b {
+    font-weight: 700;
+    color: var(--text-white);
+  }
 
-      p { margin-bottom: 1.5rem; }
-      
-      ul, ol { 
-        padding-left: 1.25rem; 
-        margin-bottom: 1.5rem;
-        li { margin-bottom: 0.5rem; }
-      }
+  a {
+    color: var(--text-link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 
-      strong, b { color: var(--text-white); font-weight: 700; }
-      
-      a { 
-        color: var(--text-link); 
-        text-decoration: underline;
-        text-underline-offset: 2px;
-      }
-
-      h1, h2, h3 {
-        color: var(--text-white);
-        margin: 2rem 0 1rem;
-        font-size: 18px;
-        font-weight: 700;
-      }
-    }
+  h1,
+  h2,
+  h3 {
+    color: var(--text-sub);
+    margin: var(--spacing-sm) 0;
+    font-size: var(--font-lg);
+    line-height: 28px;
+    font-weight: 700;
   }
 `;

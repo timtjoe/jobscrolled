@@ -78,7 +78,7 @@ export const JobPage = () => {
       <Grid>
         <HeaderMobile>
           <button onClick={() => navigate("/")} className="back-btn">
-            <Icons.arrow_left size={20} />
+            <Icons.arrow_left size={22} />
             <span>Job Details</span>
           </button>
         </HeaderMobile>
@@ -91,7 +91,7 @@ export const JobPage = () => {
           <StickyWrapper>
             <Company details={job} />
             <ErrorBoundary fallback={null}>
-              <Suggestions jobs={similarJobs} title="Similar Opportunities" />
+              <Suggestions jobs={similarJobs} title="Similar Jobs" />
             </ErrorBoundary>
           </StickyWrapper>
         </Sidebar>
@@ -134,22 +134,22 @@ const HeaderMobile = styled.header`
       display: flex;
       align-items: center;
       gap: 12px;
-      color: var(--text-white);
+      color: var(--text-muted);
       font-weight: 700;
+      font-size: var(--font-md);
+      line-height: 20px;
     }
   }
 `;
 
 const Content = styled.div`
-  padding: var(--spacing-md);
-
-  height: 100vh;
+  padding: 0;
+  max-height: 100vh;
   overflow-y: auto;
   border-right: 1px solid var(--border-dim);
 `;
 
 const Sidebar = styled.aside`
-  /* Desktop Layout */
   @media (min-width: 1025px) {
     height: 100vh;
     border-right: 1px solid var(--border-dim); 
@@ -160,8 +160,9 @@ const Sidebar = styled.aside`
   }
 
   @media (max-width: 1024px) {
-    padding: 24px;
-    margin-bottom: 50px;
+    padding: var(--spacing-sm) 0;
+    margin-bottom: 70px;
+    
   }
 `;
 
@@ -182,6 +183,7 @@ const StickyWrapper = styled.div`
 const Center = styled.div`
   display: grid;
   place-items: center;
+  align-content: center;
   height: 100vh;
   background: var(--bg-black);
   color: var(--text-muted);

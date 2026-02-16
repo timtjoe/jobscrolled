@@ -4,6 +4,7 @@ import { useAtomValue } from "jotai";
 import { useJobs } from "@/hooks/useJobs";
 import { withJob } from "@/store/job.store";
 import styled from "styled-components";
+import { ViewerSkeleton } from "@/components/Skeleton";
 
 export const Redirector: React.FC = () => {
   const navigate = useNavigate();
@@ -11,40 +12,49 @@ export const Redirector: React.FC = () => {
   const filters = useAtomValue(withJob.filters);
   const { data, isLoading } = useJobs(filters);
 
+  // Use a simpler check for desktop view
+  const isDesktop = typeof window !== "undefined" && window.innerWidth > 768;
+
   useEffect(() => {
+    // Only redirect if we are on the base route
     if (location.pathname !== "/") return;
 
-    const isMobile = window.innerWidth <= 768;
-
-    if (!isMobile && !isLoading && data?.data?.[0]) {
+    if (isDesktop && !isLoading && data?.data?.[0]) {
       const firstJobId = data.data[0].id;
       navigate(`/jobs/${firstJobId}`, { replace: true });
     }
-  }, [data, isLoading, navigate, location.pathname]);
+  }, [data, isLoading, navigate, location.pathname, isDesktop]);
 
-  if (location.pathname === "/" && window.innerWidth > 768) {
+  // On desktop, while we are at "/", show the skeleton or empty state
+  if (location.pathname === "/" && isDesktop) {
     return (
-      <EmptyState>
+      <Container>
         {isLoading ? (
-          <p>Analyzing opportunities...</p>
+          <ViewerSkeleton />
         ) : !data?.data?.length ? (
-          <p>No jobs found. Try adjusting your filters.</p>
+          <Message>No jobs found. Try adjusting your filters.</Message>
         ) : (
-          <p>Selecting best match...</p>
+          <ViewerSkeleton /> 
         )}
-      </EmptyState>
+      </Container>
     );
   }
 
   return null;
 };
 
-const EmptyState = styled.div`
+const Container = styled.div`
+  height: 100vh;
+  width: 100%;
+  background-color: var(--bg-black);
+  overflow: hidden;
+`;
+
+const Message = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #888;
-  font-size: 14px;
-  background-color: #fff;
+  color: var(--text-muted);
+  font-size: var(--font-sm);
 `;

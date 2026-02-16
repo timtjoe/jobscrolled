@@ -19,25 +19,15 @@ const SuggestionImage = ({ job }: { job: JobContract }) => {
   const firstLetter = job.company?.charAt(0).toUpperCase() || "?";
 
   if (job.logo && !isError) {
-    return (
-      <img 
-        src={job.logo} 
-        alt="" 
-        onError={() => setIsError(true)} 
-      />
-    );
+    return <img src={job.logo} alt="" onError={() => setIsError(true)} />;
   }
 
-  return (
-    <Placeholder $bg={brandColor}>
-      {firstLetter}
-    </Placeholder>
-  );
+  return <Placeholder $bg={brandColor}>{firstLetter}</Placeholder>;
 };
 
-const SuggestionsContent: React.FC<SuggestionsProps> = ({ 
-  jobs = [], 
-  title = "Similar Roles" 
+const SuggestionsContent: React.FC<SuggestionsProps> = ({
+  jobs = [],
+  title = "Similar Roles",
 }) => {
   if (!jobs || jobs.length === 0) return null;
 
@@ -50,7 +40,7 @@ const SuggestionsContent: React.FC<SuggestionsProps> = ({
             <LogoSection>
               <SuggestionImage job={job} />
             </LogoSection>
-            
+
             <Info>
               <JobTitle>{job.title}</JobTitle>
               <Category>
@@ -73,21 +63,21 @@ export const Suggestions: React.FC<SuggestionsProps> = (props) => (
 /* --- STYLES --- */
 
 const Wrapper = styled.div`
-  padding: 24px 0;
+  padding:0 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
   border-top: 1px solid var(--border-dim);
-  margin-top: 10px;
 `;
 
 const Heading = styled.h3`
-  font-size: 11px;
+  font-size: var(--font-md);
   font-weight: 700;
-  text-transform: uppercase;
+  text-transform: capitalize;
   letter-spacing: 0.08em;
   color: var(--text-muted);
-  padding: 0 24px;
+  padding:var(--spacing-sm);
+  padding-bottom:0;
 `;
 
 const List = styled.div`
@@ -99,24 +89,23 @@ const SuggestionCard = styled(NavLink)`
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 24px;
+  padding: var(--spacing-xs);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease;
 
   &:hover {
-    background: var(--bg-dark);
+    background-color: var(--bg-dark);
   }
 
   &.active {
-    background: var(--bg-accent-soft);
+    background: var(--bg-accent);
     pointer-events: none;
-    opacity: 0.7;
   }
 `;
 
 const LogoSection = styled.div`
-  width: 32px;
-  height: 32px;
+  width: 40px;
+  height: 39px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -125,7 +114,7 @@ const LogoSection = styled.div`
   img {
     width: 100%;
     height: 100%;
-    border-radius: 6px;
+    border-radius: 2px;
     object-fit: cover;
     border: 1px solid var(--border-dim);
     background: white;
@@ -136,7 +125,7 @@ const Placeholder = styled.div<{ $bg: string }>`
   width: 100%;
   height: 100%;
   border-radius: 6px;
-  background: ${p => p.$bg};
+  background: ${(p) => p.$bg};
   color: white;
   display: flex;
   align-items: center;
@@ -153,7 +142,7 @@ const Info = styled.div`
 `;
 
 const JobTitle = styled.span`
-  font-size: 13px;
+  font-size: var(--font-sm);
   font-weight: 600;
   color: var(--text-sub);
   white-space: nowrap;
@@ -163,8 +152,9 @@ const JobTitle = styled.span`
 `;
 
 const Category = styled.span`
-  font-size: 11px;
+  font-size: var(--font-xxs);
+  line-height: 15px;
   color: var(--text-muted);
   text-transform: capitalize;
-  margin-top: 2px;
+  margin-top: 4px;
 `;

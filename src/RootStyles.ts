@@ -57,6 +57,7 @@ export const RootStyles = createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+  letter-spacing: 0.05em;
 
     /* Firefox Support */
     scrollbar-width: thin;

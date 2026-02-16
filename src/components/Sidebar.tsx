@@ -83,21 +83,22 @@ const Logo = styled.div`
   align-items: center;
   background: var(--bg-surface);
   backdrop-filter: blur(12px);
-
-
+  
+  
   img {
     height: 100%;
     width: auto;
   }
-
+  
   .mobile-logo {
     display: none;
   }
   .desktop-logo {
     display: block;
   }
-
+  
   @media (max-width: 768px) {
+    background: var(--bg-overlay);
     width: 58px;
     height: 58px;
     border-radius: var(--radius-lg);
