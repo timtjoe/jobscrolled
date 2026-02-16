@@ -1,11 +1,35 @@
+import { useMemo } from "react";
 import { useParams, Link, useNavigate } from "react-router";
 import styled from "styled-components";
 import { useJobs } from "@/hooks/useJobs";
 import { useAtomValue } from "jotai";
 import { withJob } from "@/store/job.store";
-import { Viewer, Company } from "@/features/jobs";
+import { Viewer, Company, Suggestions } from "@/features/jobs";
+import { ViewerSkeleton, SidebarSkeleton } from "@/components/Skeleton";
+import { ErrorBoundary, TechnicalError } from "@/components/errors";
 import { RouteConfig } from "@/types";
 import { Icons } from "@/components/icons";
+import type { JobContract } from "@/types/jobs";
+
+const calculateSimilarity = (current: JobContract, other: JobContract) => {
+  let score = 0;
+  const words = current.title
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((w) => w.length > 2);
+  const oTitle = other.title.toLowerCase();
+
+  words.forEach((word) => {
+    if (oTitle.includes(word)) score += 5;
+  });
+
+  const cType = Array.isArray(current.type) ? current.type : [current.type];
+  const oType = Array.isArray(other.type) ? other.type : [other.type];
+  if (cType.some((t) => oType.includes(t))) score += 3;
+
+  if (current.location === other.location) score += 1;
+  return score;
+};
 
 export const JobPage = () => {
   const { jobId } = useParams();
@@ -15,34 +39,64 @@ export const JobPage = () => {
 
   const job = data?.data?.find((j) => String(j.id) === String(jobId));
 
-  if (isLoading) return <Center>Loading details...</Center>;
+  const similarJobs = useMemo(() => {
+    if (!job || !data?.data) return [];
+    return data.data
+      .filter((item) => String(item.id) !== String(jobId))
+      .map((item) => ({ ...item, score: calculateSimilarity(job, item) }))
+      .filter((item) => item.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 5);
+  }, [job, data?.data, jobId]);
 
-  if (!job) return (
-    <Center>
-      <p>Job not found</p>
-      <Link to="/" style={{ color: "var(--text-link)" }}>Return Home</Link>
-    </Center>
-  );
+  if (isLoading)
+    return (
+      <Grid>
+        <Content>
+          <ViewerSkeleton />
+        </Content>
+        <Sidebar>
+          <SidebarSkeleton />
+        </Sidebar>
+      </Grid>
+    );
+
+  if (!job)
+    return (
+      <Center>
+        <p>Job not found</p>
+        <Link to="/" style={{ color: "var(--text-link)" }}>
+          Return Home
+        </Link>
+      </Center>
+    );
 
   return (
-    <Grid>
-      <HeaderMobile>
-        <button onClick={() => navigate("/")} className="back-btn">
-          <Icons.arrow_left size={20} />
-          <span>Job Details</span>
-        </button>
-      </HeaderMobile>
+    <ErrorBoundary
+      fallback={<TechnicalError onRetry={() => window.location.reload()} />}
+    >
+      <Grid>
+        <HeaderMobile>
+          <button onClick={() => navigate("/")} className="back-btn">
+            <Icons.arrow_left size={20} />
+            <span>Job Details</span>
+          </button>
+        </HeaderMobile>
 
-      <Content>
-        <Viewer job={job} />
-      </Content>
-      
-      <Sidebar>
-        <StickyWrapper>
-          <Company details={job} />
-        </StickyWrapper>
-      </Sidebar>
-    </Grid>
+        <Content>
+          <Viewer job={job} />
+        </Content>
+
+        <Sidebar>
+          <StickyWrapper>
+            <Company details={job} />
+            <ErrorBoundary fallback={null}>
+              <Suggestions jobs={similarJobs} title="Similar Opportunities" />
+            </ErrorBoundary>
+          </StickyWrapper>
+        </Sidebar>
+      </Grid>
+    </ErrorBoundary>
   );
 };
 
@@ -51,12 +105,12 @@ export const JobRoutes: RouteConfig = {
   element: <JobPage />,
 };
 
+/* --- STYLES --- */
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 320px;
   background: var(--bg-black);
   min-height: 100vh;
-
   @media (max-width: 1024px) {
     display: flex;
     flex-direction: column;
@@ -65,7 +119,6 @@ const Grid = styled.div`
 
 const HeaderMobile = styled.header`
   display: none;
-  
   @media (max-width: 1024px) {
     display: flex;
     position: sticky;
@@ -75,15 +128,12 @@ const HeaderMobile = styled.header`
     backdrop-filter: blur(12px);
     padding: 12px 16px;
     border-bottom: 1px solid var(--border-dim);
-
     .back-btn {
       display: flex;
       align-items: center;
       gap: 12px;
       color: var(--text-white);
-      font-size: var(--font-xm);
       font-weight: 700;
-      cursor: pointer;
     }
   }
 `;
@@ -98,20 +148,36 @@ const Content = styled.div`
   @media (max-width: 1024px) {
     padding: 24px;
   }
-`;
+  `;
 
 const Sidebar = styled.aside`
-  padding: 24px;
+  /* On desktop, the container itself doesn't scroll, its child does */
+  @media (min-width: 1025px) {
+    height: 100vh;
+    overflow: hidden; 
+    border-right: 1px solid var(--border-dim);
+  }
+
   @media (max-width: 1024px) {
+    padding: 24px;
     border-top: 1px solid var(--border-dim);
-    margin-bottom: 80px; /* Space for the fixed Apply button footer */
+    margin-bottom: 20px;
   }
 `;
 
 const StickyWrapper = styled.div`
   @media (min-width: 1025px) {
     position: sticky;
-    top: 40px;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 0; /* Padding is usually handled inside Company/Suggestions */
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
   }
 `;
 

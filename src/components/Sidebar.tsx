@@ -81,9 +81,9 @@ const HeaderGroup = styled.div`
 const Logo = styled.div`
   display: flex;
   align-items: center;
-  background: var(--bg-overlay);
-  backdrop-filter: blur(16px) saturate(150%);
-  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  background: var(--bg-surface);
+  backdrop-filter: blur(12px);
+
 
   img {
     height: 100%;

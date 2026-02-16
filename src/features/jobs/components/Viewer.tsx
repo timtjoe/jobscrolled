@@ -1,175 +1,160 @@
 import React, { useMemo } from "react";
+import styled from "styled-components";
 import parse from "html-react-parser";
 import DOMPurify from "dompurify";
-import styled from "styled-components";
 import { ErrorBoundary, TechnicalError } from "@/components/errors";
+import { formatCompactNumber } from "../utils";
+import { ViewerSkeleton } from "@/components/Skeleton";
 import type { JobContract } from "@/types/jobs";
-import { formatCompactNumber } from "../utils"; // Import the utility
 
 interface ViewerProps {
-  job: JobContract;
+  job?: JobContract | null;
+  isLoading?: boolean;
 }
 
-export const Viewer: React.FC<ViewerProps> = ({ job }) => {
-  // Memoize cleaning logic for performance
-  const parsedContent = useMemo(() => {
-    const cleanHtml = (job.description || "")
-      .replace(/Please mention the word.*$/i, "")
-      .replace(/#\w+=/g, "")
-      .replace(/\u00e2/g, "");
+export const Viewer: React.FC<ViewerProps> = ({ job, isLoading }) => {
+  // 1. Show skeleton during fetch
+  if (isLoading) return <ViewerSkeleton />;
 
-    const sanitized = DOMPurify.sanitize(cleanHtml, {
-      ALLOWED_TAGS: ["p", "strong", "em", "b", "i", "ul", "ol", "li", "a", "h1", "h2", "h3", "br"],
-      ALLOWED_ATTR: ["href"],
-    });
+  // 2. Return empty screen if no job is selected/found
+  if (!job) return null;
 
+  // 3. Process Description
+  const content = useMemo(() => {
+    if (!job.description) return null;
+    const sanitized = DOMPurify.sanitize(
+      job.description
+        .replace(/Please mention the word.*$/i, "")
+        .replace(/#\w+=/g, ""),
+      {
+        ALLOWED_TAGS: ["p", "strong", "em", "b", "i", "ul", "ol", "li", "a", "h1", "h2", "h3", "br"],
+        ALLOWED_ATTR: ["href"],
+      }
+    );
     return parse(sanitized);
   }, [job.description]);
 
-  // Format salary using the compact utility
-  const salary = job?.salary;
-  const salaryDisplay = (salary?.min && salary?.max)
-    ? `${formatCompactNumber(salary.min)} - ${formatCompactNumber(salary.max)} ${salary.currency || 'USD'}`
-    : "Competitive Salary";
+  // 4. Handle Salary (Dynamic fallback)
+  const salaryText = useMemo(() => {
+    if (!job.salary?.min || !job.salary?.max) return null;
+    const { min, max, currency } = job.salary;
+    return `${formatCompactNumber(min)} - ${formatCompactNumber(max)} ${currency || "USD"}`;
+  }, [job.salary]);
+
+  // 5. Handle Employment Type (String or Array)
+  const typeText = useMemo(() => {
+    if (!job.type) return null;
+    return Array.isArray(job.type) ? job.type.join(", ") : job.type;
+  }, [job.type]);
 
   return (
     <ErrorBoundary fallback={<TechnicalError onRetry={() => window.location.reload()} />}>
-      <OuterWrapper>
-        <ViewerContainer>
-          <Header>
-            <JobTitle>{job.title || "Untitled Position"}</JobTitle>
-            <LocationText>{job.location}</LocationText>
-            
-            <PerksRow>
-              <span className="salary">{salaryDisplay}</span>
-              
-              {job.isRemote && (
-                <span className="remote-status">Remote</span>
-              )}
-              
-              {/* Optional: Add other contract types if available in your type */}
-              <span>Full-time</span>
-            </PerksRow>
-          </Header>
+      <Root>
+        <header>
+          <h1>{job.title}</h1>
+          {job.location && <p className="loc">{job.location}</p>}
+          
+          <div className="perks">
+            {salaryText && <span className="bold">{salaryText}</span>}
+            {job.isRemote && <span className="blue">Remote</span>}
+            {typeText && <span>{typeText}</span>}
+          </div>
+        </header>
 
-          <ContentBody>
-            <SectionTitle>About the role</SectionTitle>
-            <HtmlWrapper>{parsedContent}</HtmlWrapper>
-          </ContentBody>
-        </ViewerContainer>
-      </OuterWrapper>
+        {content && (
+          <section>
+            {/* Header only shows if content exists */}
+            <div className="html">{content}</div>
+          </section>
+        )}
+      </Root>
     </ErrorBoundary>
   );
 };
 
 /* --- STYLES --- */
 
-/* Update these styles in your Viewer component */
-
-const OuterWrapper = styled.div`
-  height: auto; /* Remove 100% or 100vh */
-  min-height: 100%;
-`;
-
-const ViewerContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+const Root = styled.div`
+  padding: 40px;
   background: var(--bg-black);
-  
-  /* Desktop padding */
-  @media (min-width: 769px) {
-    padding: 40px;
-    /* Remove overflow-y: auto here! */
+  animation: fadeIn 0.3s ease-in-out;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 
   @media (max-width: 768px) {
     padding: 24px 20px;
   }
-`;
 
-
-const Header = styled.div`
-  padding-bottom: 24px;
-  border-bottom: 1px solid var(--border-dim);
-`;
-
-const JobTitle = styled.h1`
-  font-size: var(--font-lg, 20px);
-  line-height: 24px;
-  font-weight: 700;
-  color: var(--text-sub);
-  margin-bottom: 4px;
-`;
-
-const LocationText = styled.p`
-  font-size: var(--font-sm, 14px);
-  color: var(--text-muted);
-  margin-bottom: 12px;
-`;
-
-const PerksRow = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  font-size: var(--font-sm, 14px);
-  color: var(--text-muted);
-
-  .salary {
-    font-weight: 600;
+  header {
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-dim);
+    
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    
+    .loc {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    
+    .perks {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-muted);
+      
+      .bold { font-weight: 600; color: var(--text-main); }
+      .blue { color: var(--text-link); font-weight: 600; }
+      
+      /* Logic for dots between available perks */
+      span:not(:last-child)::after {
+        content: "•";
+        margin-left: 10px;
+        color: var(--border-dim);
+      }
+    }
   }
 
-  .remote-status {
-    color: var(--text-link); /* Highlighting remote in blue */
-    font-weight: 600;
-  }
+  section {
+    padding-top: 32px;
+    
+    .html {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-main);
 
-  span:not(:last-child)::after {
-    content: "•";
-    margin-left: 8px;
-    color: var(--border-dim);
-  }
-`;
+      p { margin-bottom: 1.5rem; }
+      
+      ul, ol { 
+        padding-left: 1.25rem; 
+        margin-bottom: 1.5rem;
+        li { margin-bottom: 0.5rem; }
+      }
 
-const ContentBody = styled.div`
-  padding-top: 32px;
-`;
+      strong, b { color: var(--text-white); font-weight: 700; }
+      
+      a { 
+        color: var(--text-link); 
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
 
-const SectionTitle = styled.h2`
-  font-size: 20px;
-  line-height: 28px;
-  font-weight: 700;
-  color: var(--text-white);
-  margin-bottom: 16px;
-`;
-
-const HtmlWrapper = styled.div`
-  font-size: 14px;
-  line-height: 24px;
-  color: var(--text-main);
-
-  p { margin-bottom: 20px; }
-  
-  strong, b { 
-    color: var(--text-white); 
-    font-weight: 700; 
-  }
-
-  ul, ol { 
-    padding-left: 20px; 
-    margin-bottom: 20px; 
-    li { margin-bottom: 8px; }
-  }
-
-  a { 
-    color: var(--text-link); 
-    text-decoration: none; 
-    &:hover { text-decoration: underline; } 
-  }
-
-  h1, h2, h3 { 
-    color: var(--text-white); 
-    margin: 24px 0 12px; 
-    font-size: var(--font-xm, 17px);
+      h1, h2, h3 {
+        color: var(--text-white);
+        margin: 2rem 0 1rem;
+        font-size: 18px;
+        font-weight: 700;
+      }
+    }
   }
 `;
