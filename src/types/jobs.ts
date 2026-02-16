@@ -1,6 +1,3 @@
-// features/jobs/job.types.ts
-
-// --- API Response Types ---
 export interface ArbeitNowItem {
   slug: string;
   title: string;
@@ -17,7 +14,12 @@ export interface RiseItem {
   title: string;
   owner: { companyName: string; photo: string };
   locationAddress: string;
-  descriptionBreakdown: { oneSentenceJobSummary: string; salaryRangeMinYearly: number; salaryRangeMaxYearly: number; employmentType: string };
+  descriptionBreakdown: {
+    oneSentenceJobSummary: string;
+    salaryRangeMinYearly: number;
+    salaryRangeMaxYearly: number;
+    employmentType: string;
+  };
   url: string;
   type: string;
   createdAt: string;
@@ -57,7 +59,6 @@ export interface HNItem {
   time: number;
 }
 
-// --- Internal App Types ---
 export interface BaseJob {
   id: string;
   title: string;
@@ -78,13 +79,14 @@ export type JobContract = BaseJob & {
 
 export interface JobFilters {
   search: string;
-  sortBy: 'date' | 'title';
-  type: 'all' | 'remote' | 'onsite';
+  sortBy: "date" | "title";
+  type: "all" | "remote" | "onsite";
   page: number;
   pageSize: number;
-  source?: string; // Optional field for targeted feeds like HN
+  source?: string;
 }
-export const jobKeys = {
-  all: ['jobs'] as const,
-  list: () => [...jobKeys.all, 'list'] as const,
+
+export const JobKeys = {
+  all: ["jobs"] as const,
+  list: () => [...JobKeys.all, "list"] as const,
 };

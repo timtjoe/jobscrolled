@@ -5,9 +5,12 @@ import type {
   JobicyItem,
   RemoteOKItem,
   HNItem,
-} from "./job.types";
+} from "@/types/jobs";
 
-const checkRemote = (location: string, text: string): boolean => {
+/**
+ * Private helper to determine remote status based on available text
+ */
+const checkRemote = (location: string = "", text: string = ""): boolean => {
   const checkString = `${location} ${text}`.toLowerCase();
   return checkString.includes("remote") || checkString.includes("anywhere");
 };
@@ -36,10 +39,10 @@ export const Mappers = {
     salary: {
       min: item.descriptionBreakdown.salaryRangeMinYearly,
       max: item.descriptionBreakdown.salaryRangeMaxYearly,
-      currency: "USD",
+      currency: "USD", // Explicitly added to match unified type
     },
     type: [item.type, item.descriptionBreakdown.employmentType],
-    postedAt: item.createdAt,
+    postedAt: item.createdAt, // Rise typically provides ISO
     logo: item.owner.photo,
     source: "Rise",
     isRemote: checkRemote(
@@ -69,28 +72,26 @@ export const Mappers = {
     location: item.location || "Remote",
     description: item.description,
     url: item.url,
-    salary: { min: item.salary_min, max: item.salary_max, currency: "USD" },
+    salary: item.salary_min
+      ? {
+          min: item.salary_min,
+          max: item.salary_max,
+          currency: "USD",
+        }
+      : undefined,
     type: item.tags,
     postedAt: item.date,
     logo: item.company_logo,
     source: "RemoteOK",
-    isRemote: true, // Native to the source
+    isRemote: true,
   }),
 
-  // features/jobs/jobs.mapper.ts
-
-  // features/jobs/jobs.mapper.ts
-
-  // features/jobs/jobs.mapper.ts
-
   mapHackerNews: (item: HNItem): JobContract => {
-    // Destructure with default values to handle optional API fields in one line
     const { title: rawTitle = "", text: rawText = "", url, id, time } = item;
 
-    // Split and immediately destructure with defaults for company and position
-    // This satisfies the JobContract without manual "possibly undefined" checks
+    // Split on common HN patterns: "Company (YC S21) Is hiring Position" or "Company: Position"
     const [company = "Hacker News", position = rawTitle] = rawTitle.split(
-      / is hiring | is looking for /i,
+      / is hiring | is looking for |: /i,
     );
 
     const isRemote = /remote/i.test(rawText + rawTitle);

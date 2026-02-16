@@ -28,8 +28,10 @@ export const Icons = {
   comment: Vendor.MessageCircle,
   share: Vendor.Share2,
   send: Vendor.Send,
-  more_vertical: Vendor.MoreVertical,    
-  eye_off: Vendor.EyeOff,                
-  flag: Vendor.Flag,                     
+  more_vertical: Vendor.MoreVertical,
+  eye_off: Vendor.EyeOff,
+  flag: Vendor.Flag,
+  briefcase: Vendor.Briefcase,
+  map_pin: Vendor.MapPin,
   bluesky: CustomIcons.Bluesky,
 };

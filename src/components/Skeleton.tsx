@@ -1,43 +1,33 @@
 import styled, { keyframes } from "styled-components";
 
-const shimmer = keyframes`
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+const pulse = keyframes`
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
 `;
 
-const SkeletonBase = styled.div`
+const Box = styled.div<{ $h?: string; $w?: string }>`
   background: #eee;
-  background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: ${shimmer} 1.5s infinite linear;
+  height: ${p => p.$h || "1rem"};
+  width: ${p => p.$w || "100%"};
   border-radius: 4px;
+  animation: ${pulse} 1.5s ease-in-out infinite;
 `;
 
-const ItemWrapper = styled.div`
+const Item = styled.div`
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 16px 0;
-  border-bottom: 1px solid #f0f0f0;
 `;
 
-const SkeletonTitle = styled(SkeletonBase)`
-  height: 1.1rem;
-  width: 60%;
-`;
-
-const SkeletonMeta = styled(SkeletonBase)`
-  height: 0.8rem;
-  width: 40%;
-`;
-
-export const JobSkeleton = ({ count = 5 }: { count?: number }) => (
+export const JobSkeleton = ({ count = 6 }) => (
   <>
     {Array.from({ length: count }).map((_, i) => (
-      <ItemWrapper key={i}>
-        <SkeletonTitle />
-        <SkeletonMeta />
-      </ItemWrapper>
+      <Item key={i}>
+        <Box $h="14px" $w="70%" />
+        <Box $h="12px" $w="40%" />
+      </Item>
     ))}
   </>
 );

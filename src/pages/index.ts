@@ -1,2 +1,2 @@
-export * from "./About";
-export * from "./Home";
+export * from "./Job"
+export * from "./Redirector"
