@@ -6,13 +6,18 @@ export interface JobNamespace {
   selectedId: PrimitiveAtom<string | null>;
 }
 
+const initialFilters: JobFilters = {
+  search: "",
+  sortBy: "date",
+  type: "all",
+  page: 1,
+  pageSize: 15,
+  seniority: "all",
+  employment: "all",
+};
+
 export const withJob: JobNamespace = {
-  filters: atom<JobFilters>({
-    search: "",
-    type: "all",
-    sortBy: "date",
-    page: 1,
-    pageSize: 15,
-  }),
+  // Pass the initialFilters here to fix the missing property errors
+  filters: atom<JobFilters>(initialFilters),
   selectedId: atom<string | null>(null),
 };

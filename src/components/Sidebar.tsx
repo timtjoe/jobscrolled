@@ -1,0 +1,152 @@
+import React from "react";
+import styled from "styled-components";
+import { useAtom } from "jotai";
+import { withJob } from "@/store/job.store";
+import { Icons } from "@/components/icons";
+import { Filters } from "./Filters";
+import logo_lg from "/logo.svg";
+import logo_sm from "/logo_sm.svg";
+import { NavLink } from "react-router";
+
+export const Sidebar: React.FC = () => {
+  const [filters, setFilters] = useAtom(withJob.filters);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters((prev) => ({
+      ...prev,
+      search: e.target.value,
+      page: 1,
+    }));
+  };
+
+  return (
+    <Container>
+      <HeaderGroup>
+        <Logo>
+          <NavLink to={"/"}>
+          <img src={logo_sm} alt="Logo" className="mobile-logo" />
+          <img src={logo_lg} alt="Company Logo" className="desktop-logo" />
+          </NavLink>
+        </Logo>
+
+        <SearchBox>
+          <Icons.search size={14} />
+          <SearchInput
+            placeholder="Search roles..."
+            value={filters.search || ""}
+            onChange={handleSearch}
+          />
+        </SearchBox>
+      </HeaderGroup>
+
+      <Filters />
+    </Container>
+  );
+};
+
+/* --- STYLES --- */
+
+const Container = styled.aside`
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding-bottom: var(--spacing-md);
+  background: var(--bg-black);
+  height: fit-content;
+  border-bottom: thin solid var(--border-dim);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+`;
+
+const HeaderGroup = styled.div`
+  display: contents; /* Behaves as if children are direct children of Container on desktop */
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-xs);
+  }
+`;
+
+const Logo = styled.div`
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.911);
+  backdrop-filter: blur(16px) saturate(150%);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+
+  img {
+    height: 100%;
+    width: auto;
+  }
+
+  .mobile-logo {
+    display: none;
+  }
+  .desktop-logo {
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    justify-content: center;
+    padding: 6px;
+
+    .mobile-logo {
+      display: block;
+      height: 100%;
+    }
+    .desktop-logo {
+      display: none;
+    }
+  }
+`;
+
+const SearchBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-dark);
+  padding: 0 var(--spacing-md);
+  margin: 0 var(--spacing-xs);
+  height: 48px;
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  transition: background-color 0.2s ease;
+
+  &:focus-within {
+    background: var(--bg-accent);
+    color: var(--text-white);
+  }
+
+  @media (max-width: 768px) {
+    margin: 0;
+    flex: 1;
+    height: 42px;
+  }
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-white);
+  font-weight: 700;
+  font-size: var(--font-sm);
+
+  &::placeholder {
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+`;

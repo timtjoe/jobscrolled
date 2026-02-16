@@ -34,9 +34,22 @@ export const RootStyles = createGlobalStyle`
     --border-dim: #2f3336;
     --border-pale: #ebebeb;
 
-    /* Semantic Spacing & Sizing */
-    --radius: 12px;
-    --container-max: 1200px;
+    --radius-sm: 12px;
+    --radius-md: 17px;
+    --radius-lg: 23px;
+    --radius-xl: 30%;
+    --radius-rd: 50%;
+
+
+    --breakpoint-sm: 768px;
+    --breakpoint-lg: 1200px;
+    --breakpoint-xs: 438px;
+
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 18px;
+    --spacing-lg: 24px;
+    --spacing-xl: 38px;
   }
 
   /* --- Scrollbar Styling --- */

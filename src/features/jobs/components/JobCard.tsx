@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router"; 
+import { NavLink } from "react-router";
 import styled from "styled-components";
 import type { JobContract } from "@/types/jobs";
 import { formatCompactNumber, getLogoTheme } from "../utils";
@@ -17,31 +17,27 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
   const brandBg = getLogoTheme(companyName);
 
   const salary = job?.salary;
-  const salaryDisplay = (salary?.min && salary?.max) 
-    ? `${formatCompactNumber(salary.min)} - ${formatCompactNumber(salary.max)} ${salary.currency || 'USD'}`
-    : "Competitive Salary";
+  const salaryDisplay =
+    salary?.min && salary?.max
+      ? `${formatCompactNumber(salary.min)} - ${formatCompactNumber(salary.max)} ${salary.currency || "USD"}`
+      : "Competitive Salary";
 
   return (
-    <StyledNavLink to={`/jobs/${job.id}`}>
-      <ItemContainer>
-        <LogoContainer>
-          {/* Detect broken URLs or missing logos */}
+    <Card to={`/jobs/${job.id}`}>
+      <Item>
+        <LogoWrap>
           {job.logo && !imgError ? (
-            <Logo 
-              src={job.logo} 
-              alt="" 
-              onError={() => setImgError(true)} 
-            />
+            <Logo src={job.logo} alt="" onError={() => setImgError(true)} />
           ) : (
-            <LogoPlaceholder style={{ backgroundColor: brandBg }}>
+            <Placeholder style={{ backgroundColor: brandBg }}>
               {firstLetter}
-            </LogoPlaceholder>
+            </Placeholder>
           )}
-        </LogoContainer>
+        </LogoWrap>
 
         <Content>
           <Title>{job.title || "Untitled Position"}</Title>
-          
+
           <MetaRow>
             <CompanyName>{companyName}</CompanyName>
             <Dot>•</Dot>
@@ -56,35 +52,40 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
             <span className="salary">{salaryDisplay}</span>
           </PerksRow>
         </Content>
-      </ItemContainer>
-    </StyledNavLink>
+      </Item>
+    </Card>
   );
 };
 
 /* --- STYLES --- */
 
-const StyledNavLink = styled(NavLink)`
+const Card = styled(NavLink)`
+min-height: 100px;
   text-decoration: none;
   display: block;
   background: var(--bg-black);
   border-bottom: 1px solid var(--border-dim);
   transition: background 0.15s ease;
 
-  &:hover { background: var(--bg-dark); }
+  &:hover {
+    background: var(--bg-dark);
+  }
   &.active {
     background: var(--bg-accent);
     box-shadow: inset 4px 0 0 0 var(--bg-primary);
-    h3 { color: var(--text-white); }
+    h3 {
+      color: var(--text-white);
+    }
   }
 `;
 
-const ItemContainer = styled.div`
+const Item = styled.div`
   display: flex;
   gap: 14px;
   padding: 16px 20px;
 `;
 
-const LogoContainer = styled.div`
+const LogoWrap = styled.div`
   width: 40px;
   height: 40px;
   flex-shrink: 0;
@@ -99,7 +100,7 @@ const Logo = styled.img`
   background: white; /* Helpful for transparent PNG logos */
 `;
 
-const LogoPlaceholder = styled.div`
+const Placeholder = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 6px;
@@ -109,7 +110,7 @@ const LogoPlaceholder = styled.div`
   justify-content: center;
   font-weight: 800;
   font-size: 16px;
-  text-shadow: 0px 1px 2px rgba(0,0,0,0.1);
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
 `;
 
 const Content = styled.div`
@@ -126,7 +127,14 @@ const Title = styled.h3`
   font-weight: 700;
   color: var(--text-sub);
   margin-bottom: 2px;
-  text-wrap: balance;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  text-wrap: wrap;
 `;
 
 const MetaRow = styled.div`
@@ -161,14 +169,14 @@ const PerksRow = styled.div`
   line-height: 16px;
   margin-top: 2px;
   color: var(--text-muted);
-  
+
   .salary {
     font-weight: 600;
   }
 `;
 
 const WorkBadge = styled.span<{ $isRemote: boolean }>`
-  color: ${p => p.$isRemote ? 'var(--text-link)' : 'var(--text-muted)'};
+  color: ${(p) => (p.$isRemote ? "var(--text-link)" : "var(--text-muted)")};
   font-weight: 600;
 `;
 

@@ -80,10 +80,12 @@ export type JobContract = BaseJob & {
 export interface JobFilters {
   search: string;
   sortBy: "date" | "title";
-  type: "all" | "remote" | "onsite";
+  type: "all" | "remote" | "onsite" | "hybrid"; 
   page: number;
   pageSize: number;
   source?: string;
+  seniority: "all" | "junior" | "mid" | "senior";
+  employment: "all" | "full-time" | "contract" | "internship";
 }
 
 export const JobKeys = {

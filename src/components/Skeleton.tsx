@@ -1,3 +1,4 @@
+import React from "react";
 import styled, { keyframes } from "styled-components";
 
 const pulse = keyframes`
@@ -6,27 +7,40 @@ const pulse = keyframes`
 `;
 
 const Box = styled.div<{ $h?: string; $w?: string }>`
-  background: #eee;
+  /* Using root variables for skeleton color */
+  background: var(--bg-dark); 
   height: ${p => p.$h || "1rem"};
   width: ${p => p.$w || "100%"};
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   animation: ${pulse} 1.5s ease-in-out infinite;
 `;
 
 const Item = styled.div`
-  padding: 16px 24px;
-  border-bottom: 1px solid #eee;
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  
+  /* Requirements: Min-height 100px and no bottom border */
+  min-height: 100px;
+  border-bottom: none; 
 `;
 
-export const JobSkeleton = ({ count = 6 }) => (
+interface SkeletonProps {
+  count?: number;
+}
+
+export const JobSkeleton: React.FC<SkeletonProps> = ({ count = 5 }) => (
   <>
     {Array.from({ length: count }).map((_, i) => (
       <Item key={i}>
-        <Box $h="14px" $w="70%" />
-        <Box $h="12px" $w="40%" />
+        {/* Title Placeholder */}
+        <Box $h="16px" $w="60%" />
+        {/* Subtitle/Meta Placeholder */}
+        <Box $h="12px" $w="35%" />
+        {/* Brief Description Placeholder */}
+        <Box $h="12px" $w="80%" />
       </Item>
     ))}
   </>

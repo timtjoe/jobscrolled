@@ -33,5 +33,7 @@ export const Icons = {
   flag: Vendor.Flag,
   briefcase: Vendor.Briefcase,
   map_pin: Vendor.MapPin,
+  chevron_down: Vendor.ChevronDown,
+  check: Vendor.Check,
   bluesky: CustomIcons.Bluesky,
 };

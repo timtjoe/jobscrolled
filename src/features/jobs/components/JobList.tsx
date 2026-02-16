@@ -6,38 +6,6 @@ import { useJobs } from "@/hooks/useJobs";
 import { JobCard } from "./JobCard";
 import { TechnicalError } from "@/components/errors";
 import { JobSkeleton } from "@/components/Skeleton";
-import { MultiSelect } from "@/components/MultiSelect";
-
-const JOB_TYPES = [
-  { id: "remote", label: "Remote" },
-  { id: "onsite", label: "Onsite" },
-  { id: "hybrid", label: "Hybrid" },
-];
-
-const Controls: React.FC = () => {
-  const [, setFilters] = useAtom(withJob.filters);
-
-const handleApply = (selected: { id: string | number; label: string }[]) => {
-  // Cast the string to the specific literal type
-  const selectedType = (selected.length ? selected[0].id : "all") as "remote" | "onsite" | "all";
-  
-  setFilters((prev) => ({ 
-    ...prev, 
-    type: selectedType, 
-    page: 1 
-  }));
-};
-
-  return (
-    <Filter>
-      <MultiSelect 
-        data={JOB_TYPES} 
-        placeholder="Filter by Type" 
-        onApply={handleApply} 
-      />
-    </Filter>
-  );
-};
 
 const ListContent: React.FC = () => {
   const [filters, setFilters] = useAtom(withJob.filters);
@@ -54,11 +22,13 @@ const ListContent: React.FC = () => {
         setFilters((prev) => ({ ...prev, pageSize: prev.pageSize + 15 }));
       }
     },
-    [hasMore, isLoading, setFilters]
+    [hasMore, isLoading, setFilters],
   );
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleObserver, { rootMargin: "200px" });
+    const observer = new IntersectionObserver(handleObserver, {
+      rootMargin: "200px",
+    });
     if (loaderRef.current) observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [handleObserver]);
@@ -67,34 +37,47 @@ const ListContent: React.FC = () => {
 
   return (
     <>
-      <Controls />
-      <Meta>{total} Opportunities Found</Meta>
       <List>
         {jobList.map((job) => (
           <JobCard key={job.id} job={job} />
         ))}
+
+        {!isLoading && jobList.length === 0 && (
+          <EmptyState>No jobs found matching your criteria.</EmptyState>
+        )}
       </List>
+
       <ObserverTarget ref={loaderRef}>
-        {isLoading && <JobSkeleton count={2} />}
+        {isLoading && <JobSkeleton count={5} />}
       </ObserverTarget>
     </>
   );
 };
 
-export const JobList: React.FC = () => (
-  <Container>
-    <ListContent />
-  </Container>
-);
+export const JobList: React.FC = () => {
+  const [filters] = useAtom(withJob.filters);
+  const { isLoading } = useJobs(filters);
 
-const Container = styled.div`
+  return (
+    <Container $isLoading={isLoading}>
+      <ListContent />
+    </Container>
+  );
+};
+
+/* --- STYLES --- */
+
+const Container = styled.div<{ $isLoading?: boolean }>`
   width: 100%;
-  background: var(--bg-dark);
-`;
+  background: var(--bg-black);
 
-const Filter = styled.nav`
-  padding: 16px 24px;
-  border-bottom: 1px solid var(--border-main);
+  ${(p) =>
+    p.$isLoading &&
+    `
+    height: 100vh;
+    overflow: hidden;
+    pointer-events: none;
+  `}
 `;
 
 const List = styled.div`
@@ -102,16 +85,15 @@ const List = styled.div`
   flex-direction: column;
 `;
 
-const Meta = styled.div`
-  padding: 16px 24px;
-  font-size: 10px;
-  font-weight: 700;
+const EmptyState = styled.div`
+  padding: 40px 24px;
+  text-align: center;
   color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-size: 14px;
+  font-weight: 500;
 `;
 
 const ObserverTarget = styled.div`
   padding: 20px;
-  min-height: 50px;
+  min-height: 100px;
 `;
