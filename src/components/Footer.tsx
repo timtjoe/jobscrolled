@@ -1,37 +1,35 @@
 import React from "react";
 import styled from "styled-components";
 
-/**
- * Footer Component
- * Includes project-specific developer availability and personal branding.
- */
 export const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   return (
     <FooterContainer>
-      <OpportunitySection>
-        <Heading>Open to Opportunities</Heading>
-        <AvailabilityText>
-          I am currently seeking <strong>Remote-first</strong> or <strong>Relocation-friendly</strong> Frontend 
-          and Full-Stack Engineering roles where UI excellence is a priority. If you need a developer 
-          to help your product stand out, let’s talk.
-        </AvailabilityText>
-        
+      <IntroSection>
+        <Heading>About the Project</Heading>
+        <Description>
+          Hi, I'm <strong>Tim</strong>. I built this platform as part of my
+          portfolio. I'm <strong>open to offers</strong> for Remote Frontend or
+          Full-Stack roles where UI excellence is the priority.
+        </Description>
+
         <ContactLinks>
           <Link href="mailto:timtjoe@gmail.com">Email</Link>
           <Dot>•</Dot>
-          <Link href="https://wa.me/231770934646" target="_blank">WhatsApp</Link>
+          <Link href="https://wa.me/231770934646" target="_blank">
+            WhatsApp
+          </Link>
           <Dot>•</Dot>
-          <Link href="https://github.com/timtjoe" target="_blank">GitHub</Link>
+          <Link href="https://github.com/timtjoe" target="_blank">
+            GitHub
+          </Link>
         </ContactLinks>
-      </OpportunitySection>
+      </IntroSection>
 
       <Divider />
 
-      <CopyrightSection>
-        © {currentYear} Tim T. Joe. All rights reserved.
-      </CopyrightSection>
+      <CopyrightSection>© {currentYear} Tim T. Joe</CopyrightSection>
     </FooterContainer>
   );
 };
@@ -39,73 +37,71 @@ export const Footer: React.FC = () => {
 /* --- STYLES --- */
 
 const FooterContainer = styled.footer`
-  padding: 24px;
-  background: var(--bg-black);
-  margin-top: auto;
+  padding: 20px;
+  background: var(--bg-dark); /* Contrast background */
+  border-radius: 12px;
+  margin: 16px;
   display: flex;
   flex-direction: column;
 `;
 
-const OpportunitySection = styled.div`
-  margin-bottom: 20px;
+const IntroSection = styled.div`
+  margin-bottom: 16px;
 `;
 
 const Heading = styled.h4`
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: var(--text-muted);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 `;
 
-const AvailabilityText = styled.p`
+const Description = styled.p`
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.5;
   color: var(--text-sub);
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 
   strong {
-    color: var(--text-main);
+    color: var(--text-white);
     font-weight: 600;
   }
 `;
 
 const ContactLinks = styled.div`
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 12px;
 `;
 
 const Link = styled.a`
   color: var(--text-link);
   text-decoration: none;
   font-weight: 500;
-  transition: opacity 0.2s ease;
 
   &:hover {
     text-decoration: underline;
-    opacity: 0.8;
   }
 `;
 
 const Dot = styled.span`
-  color: var(--border-dim);
+  color: var(--text-muted);
   font-size: 10px;
-  user-select: none;
+  opacity: 0.5;
 `;
 
 const Divider = styled.hr`
   border: 0;
   border-top: 1px solid var(--border-dim);
-  margin: 0 0 16px 0;
-  width: 100%;
+  margin: 0 0 12px 0;
+  opacity: 0.3;
 `;
 
 const CopyrightSection = styled.div`
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text-muted);
-  letter-spacing: 0.02em;
+  font-weight: 500;
 `;
