@@ -15,7 +15,7 @@ const JOB_TYPES = [
 ];
 
 const Controls: React.FC = () => {
-  const [filters, setFilters] = useAtom(withJob.filters);
+  const [, setFilters] = useAtom(withJob.filters);
 
 const handleApply = (selected: { id: string | number; label: string }[]) => {
   // Cast the string to the specific literal type
