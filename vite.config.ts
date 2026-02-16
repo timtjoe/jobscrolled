@@ -10,6 +10,7 @@ export default defineConfig({
   base: "/jobscrolled/",
   server: {
     port: 5173,
+    open: true,
     strictPort: true,
     proxy: {
       "/api/arbeitnow": {
