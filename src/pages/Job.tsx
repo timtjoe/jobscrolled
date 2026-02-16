@@ -10,6 +10,7 @@ import { ErrorBoundary, TechnicalError } from "@/components/errors";
 import { RouteConfig } from "@/types";
 import { Icons } from "@/components/icons";
 import type { JobContract } from "@/types/jobs";
+import { Footer } from "@/components/Footer";
 
 const calculateSimilarity = (current: JobContract, other: JobContract) => {
   let score = 0;
@@ -93,6 +94,7 @@ export const JobPage = () => {
             <ErrorBoundary fallback={null}>
               <Suggestions jobs={similarJobs} title="Similar Jobs" />
             </ErrorBoundary>
+            <Footer />
           </StickyWrapper>
         </Sidebar>
       </Grid>

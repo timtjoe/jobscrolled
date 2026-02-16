@@ -66,13 +66,13 @@ export const Viewer: React.FC<ViewerProps> = ({ job, isLoading }) => {
           <MetaRow>
             <CompanyName>{job.company}</CompanyName>
             <Location>, {job.location || "Global"}</Location>
-            <Dot>•</Dot>
-            <WorkBadge $isRemote={!!job.isRemote}>
-              {job.isRemote ? "Remote" : "On-site"}
-            </WorkBadge>
           </MetaRow>
 
           <PerksRow>
+            <WorkBadge $isRemote={!!job.isRemote}>
+              {job.isRemote ? "Remote" : "On-site"}
+            </WorkBadge>
+            <Dot>•</Dot>
             {salaryText && (
               <>
                 <span className="salary">{salaryText}</span>
