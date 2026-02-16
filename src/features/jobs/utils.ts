@@ -25,3 +25,31 @@ export const cleanFirstLine = (html: string): string => {
   
   return cleanText.split('.')[0] + (cleanText.includes('.') ? '.' : '');
 };
+
+
+export const getLogoTheme = (name: string = "") => {
+  // Your brand colors from RootStyles
+  const palette = [
+    "var(--bg-primary)",
+    "var(--bg-navy)",
+    "var(--text-lavender)",
+    "var(--border-light)",
+    "var(--bg-accent)",
+  ];
+
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  
+  const index = Math.abs(hash % palette.length);
+  return palette[index];
+};
+
+export const formatCompactNumber = (number?: number) => {
+  if (number === undefined || number === null) return "";
+  return Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(number);
+};

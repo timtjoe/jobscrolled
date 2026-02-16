@@ -17,25 +17,38 @@ export const Layout = () => {
   );
 };
 
+
+const Pane = styled.aside<{ $hideOnMobile: boolean }>`
+  border-right: 1px solid var(--border-dim);
+  overflow-y: auto;
+  
+  @media (max-width: 768px) { 
+    display: ${p => (p.$hideOnMobile ? "none" : "block")}; 
+    height: auto;
+  }
+`;
+
 const Container = styled.div`
   display: grid;
   grid-template-columns: 380px 1fr;
-  height: 100vh;
-  @media (max-width: 768px) { grid-template-columns: 1fr; }
-`;
+  height: 100dvh; /* Use dynamic viewport height */
+  background: var(--bg-black);
+  overflow: hidden; /* Prevent body scroll */
 
-const Pane = styled.aside<{ $hideOnMobile: boolean }>`
-  border-right: 1px solid #eee;
-  overflow-y: auto;
   @media (max-width: 768px) { 
-    display: ${p => (p.$hideOnMobile ? "none" : "block")}; 
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow: visible;
   }
 `;
 
 const Main = styled.main<{ $showOnMobile: boolean }>`
-  flex: 1;
-  overflow: hidden;
+  height: 100%;
+  overflow-y: auto; /* This is the ONLY scrollbar for the right side */
+
   @media (max-width: 768px) { 
     display: ${p => (p.$showOnMobile ? "block" : "none")}; 
+    overflow: visible; 
+    height: auto;
   }
 `;
