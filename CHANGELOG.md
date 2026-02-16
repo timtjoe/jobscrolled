@@ -1,6 +1,18 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [0.5.0](https://github.com/timtjoe/jobscrolled/compare/v0.4.1...v0.5.0) (2026-02-16)
+
+
+### Features
+
+* Redesign UI ([3e30a68](https://github.com/timtjoe/jobscrolled/commit/3e30a68822acd3fd7085fd20190cb18d6cdbc93e))
+
+
+### Miscellaneous
+
+* restructure layout ([7e3cf1f](https://github.com/timtjoe/jobscrolled/commit/7e3cf1f4697b080a33fc1b32c0681c357c3e5bea))
+
 ### [0.4.1](https://github.com/timtjoe/jobscrolled/compare/v0.4.0...v0.4.1) (2026-02-15)
 
 
