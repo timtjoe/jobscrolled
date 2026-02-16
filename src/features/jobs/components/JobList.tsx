@@ -6,27 +6,35 @@ import { useJobs } from "@/hooks/useJobs";
 import { JobCard } from "./JobCard";
 import { TechnicalError } from "@/components/errors";
 import { JobSkeleton } from "@/components/Skeleton";
+import { MultiSelect } from "@/components/MultiSelect";
 
-/**
- * Controls: Minimalist Text Chips
- */
+const JOB_TYPES = [
+  { id: "remote", label: "Remote" },
+  { id: "onsite", label: "Onsite" },
+  { id: "hybrid", label: "Hybrid" },
+];
+
 const Controls: React.FC = () => {
   const [filters, setFilters] = useAtom(withJob.filters);
 
-  const handleType = (type: typeof filters.type) =>
-    setFilters((prev) => ({ ...prev, type, page: 1 }));
+const handleApply = (selected: { id: string | number; label: string }[]) => {
+  // Cast the string to the specific literal type
+  const selectedType = (selected.length ? selected[0].id : "all") as "remote" | "onsite" | "all";
+  
+  setFilters((prev) => ({ 
+    ...prev, 
+    type: selectedType, 
+    page: 1 
+  }));
+};
 
   return (
     <Filter>
-      {(["all", "remote", "onsite"] as const).map((t) => (
-        <Text
-          key={t}
-          $active={filters.type === t}
-          onClick={() => handleType(t)}
-        >
-          {t}
-        </Text>
-      ))}
+      <MultiSelect 
+        data={JOB_TYPES} 
+        placeholder="Filter by Type" 
+        onApply={handleApply} 
+      />
     </Filter>
   );
 };
@@ -39,24 +47,18 @@ const ListContent: React.FC = () => {
   const { data: jobList = [], total = 0 } = data || {};
   const hasMore = jobList.length < total;
 
-  // Infinite Scroll Logic
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [target] = entries;
       if (target?.isIntersecting && hasMore && !isLoading) {
-        setFilters((prev) => ({
-          ...prev,
-          pageSize: prev.pageSize + 15,
-        }));
+        setFilters((prev) => ({ ...prev, pageSize: prev.pageSize + 15 }));
       }
     },
-    [hasMore, isLoading, setFilters],
+    [hasMore, isLoading, setFilters]
   );
 
   useEffect(() => {
-    const observer = new IntersectionObserver(handleObserver, {
-      rootMargin: "200px",
-    });
+    const observer = new IntersectionObserver(handleObserver, { rootMargin: "200px" });
     if (loaderRef.current) observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [handleObserver]);
@@ -66,15 +68,12 @@ const ListContent: React.FC = () => {
   return (
     <>
       <Controls />
-
       <Meta>{total} Opportunities Found</Meta>
-
       <List>
         {jobList.map((job) => (
           <JobCard key={job.id} job={job} />
         ))}
       </List>
-
       <ObserverTarget ref={loaderRef}>
         {isLoading && <JobSkeleton count={2} />}
       </ObserverTarget>
@@ -88,34 +87,14 @@ export const JobList: React.FC = () => (
   </Container>
 );
 
-/* --- STYLES: Minimal Media Object Mode --- */
-
 const Container = styled.div`
   width: 100%;
+  background: var(--bg-dark);
 `;
 
 const Filter = styled.nav`
-  display: flex;
-  gap: 20px;
   padding: 16px 24px;
-  border-bottom: 1px solid var(--border);
-`;
-
-const Text = styled.span<{ $active: boolean }>`
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  cursor: pointer;
-  color: ${(p) => (p.$active ? "var(--primary)" : "var(--muted)")};
-  border-bottom: 2px solid
-    ${(p) => (p.$active ? "var(--primary)" : "transparent")};
-  padding-bottom: 4px;
-  transition: all 0.2s ease;
-
-  &:hover {
-    color: var(--black);
-  }
+  border-bottom: 1px solid var(--border-main);
 `;
 
 const List = styled.div`
@@ -126,13 +105,13 @@ const List = styled.div`
 const Meta = styled.div`
   padding: 16px 24px;
   font-size: 10px;
-  font-weight: 600;
-  color: var(--muted);
+  font-weight: 700;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 `;
 
 const ObserverTarget = styled.div`
-  padding: 40px;
-  min-height: 100px;
+  padding: 20px;
+  min-height: 50px;
 `;

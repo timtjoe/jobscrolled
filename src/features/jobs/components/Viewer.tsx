@@ -18,19 +18,8 @@ export const Viewer: React.FC<ViewerProps> = ({ job }) => {
 
     const sanitized = DOMPurify.sanitize(cleanHtml, {
       ALLOWED_TAGS: [
-        "p",
-        "strong",
-        "em",
-        "b",
-        "i",
-        "ul",
-        "ol",
-        "li",
-        "a",
-        "h1",
-        "h2",
-        "h3",
-        "br",
+        "p", "strong", "em", "b", "i", "ul", "ol", "li", "a", 
+        "h1", "h2", "h3", "br"
       ],
       ALLOWED_ATTR: ["href"],
     });
@@ -42,87 +31,123 @@ export const Viewer: React.FC<ViewerProps> = ({ job }) => {
     <ErrorBoundary
       fallback={<TechnicalError onRetry={() => window.location.reload()} />}
     >
-      <ViewerContainer>
-        <Header>
-          <Title>{job.title}</Title>
-          <InfoGrid>
-            <InfoItem>
-              <Label>Location</Label>
-              <Value>
-                {job.location} {job.isRemote && "🌍"}
-              </Value>
-            </InfoItem>
-            {job.salary && (
+      <OuterWrapper>
+        <ViewerContainer>
+          <Header>
+            <Title>{job.title}</Title>
+            <InfoGrid>
               <InfoItem>
-                <Label>Salary Range</Label>
+                <Label>Location</Label>
                 <Value>
-                  {job.salary.min?.toLocaleString()} -{" "}
-                  {job.salary.max?.toLocaleString()} {job.salary.currency}
+                  {job.location} {job.isRemote && "🌍"}
                 </Value>
               </InfoItem>
-            )}
-          </InfoGrid>
-        </Header>
+              {job.salary && (
+                <InfoItem>
+                  <Label>Salary Range</Label>
+                  <Value>
+                    {job.salary.min?.toLocaleString()} -{" "}
+                    {job.salary.max?.toLocaleString()} {job.salary.currency}
+                  </Value>
+                </InfoItem>
+              )}
+            </InfoGrid>
+          </Header>
 
-        <ContentBody>
-          <Description>
-            <Label style={{ marginBottom: "16px" }}>About the role</Label>
-            <HtmlWrapper>{parseSafeHTML(job.description)}</HtmlWrapper>
-          </Description>
-        </ContentBody>
-      </ViewerContainer>
+          <ContentBody>
+            <Description>
+              <Label style={{ marginBottom: "16px" }}>About the role</Label>
+              <HtmlWrapper>{parseSafeHTML(job.description)}</HtmlWrapper>
+            </Description>
+          </ContentBody>
+        </ViewerContainer>
+      </OuterWrapper>
     </ErrorBoundary>
   );
 };
 
-// Styles remain the same as your previous version
+/* --- STYLES: Fixed Desktop Layout --- */
+
+const OuterWrapper = styled.div`
+  height: 100%;
+  
+  @media (min-width: 769px) {
+    /* Anchors the section to the top and fills the viewport height */
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+`;
+
 const ViewerContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #fff;
+  background: var(--bg-black);
+  
+  @media (min-width: 769px) {
+    /* Internal scrolling for the whole component */
+    overflow-y: auto;
+    padding: 40px;
+  }
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
 `;
+
 const Header = styled.div`
   padding: 0 0 32px 0;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-main);
 `;
+
 const Title = styled.h1`
-  font-size: 2rem;
+  font-size: var(--font-lg, 20px);
   font-weight: 800;
-  color: var(--black);
+  color: var(--text-white);
   margin-bottom: 24px;
-  line-height: 1.2;
+  line-height: 1.3;
 `;
+
 const ContentBody = styled.div`
-  flex: 1;
   padding: 32px 0;
-  overflow-y: auto;
 `;
+
 const InfoGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
 `;
+
 const InfoItem = styled.div``;
+
 const Label = styled.p`
-  font-size: 11px;
+  font-size: var(--font-xs, 13px);
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--text-muted);
   margin-bottom: 6px;
   letter-spacing: 0.5px;
 `;
+
 const Value = styled.p`
-  font-size: 14px;
+  font-size: var(--font-sm, 14px);
   font-weight: 500;
-  color: var(--black);
+  color: var(--text-sub);
 `;
+
 const Description = styled.div``;
+
 const HtmlWrapper = styled.div`
-  font-size: 16px;
+  font-size: var(--font-sm, 14px);
   line-height: 1.8;
-  color: #374151;
-  p {
-    margin-bottom: 20px;
-  }
+  color: var(--text-main);
+
+  p { margin-bottom: 20px; }
+  strong, b { color: var(--text-white); font-weight: 700; }
+  ul, ol { padding-left: 20px; margin-bottom: 20px; }
+  li { margin-bottom: 8px; }
+  a { color: var(--text-link); text-decoration: none; &:hover { text-decoration: underline; } }
+  h1, h2, h3 { color: var(--text-white); margin: 24px 0 16px 0; font-size: var(--font-xm, 17px); }
 `;

@@ -70,7 +70,7 @@ const Content = styled.div`
 
 const Sidebar = styled.div`
   padding: 20px;
-  background: #f9f9f9;
+  background: var(--bg-black);
 `;
 
 const Back = styled(Link)`

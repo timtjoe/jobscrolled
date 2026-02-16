@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { NavLink } from "react-router"; // Use NavLink for automatic 'active' class
+import { NavLink } from "react-router"; 
 import styled from "styled-components";
 import { Icons } from "@/components/icons";
 import type { JobContract } from "@/types/jobs";
@@ -42,7 +42,7 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
           {hashtags.length > 0 && (
             <TagList>
               {hashtags.slice(0, 3).map((tag, i) => (
-                <HashTag key={i}>{tag.toLowerCase()}</HashTag>
+                <HashTag key={i}>#{tag.toLowerCase()}</HashTag>
               ))}
             </TagList>
           )}
@@ -56,22 +56,26 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
   );
 };
 
-/* --- STYLES --- */
+/* --- STYLES: Using Custom Palette --- */
 
 const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   display: block;
   color: inherit;
-  border-bottom: 1px solid var(--border, #eee);
+  background: var(--bg-black);
+  border-bottom: 1px solid var(--border-dim);
 
-  // Active state when the URL matches this job ID
   &.active {
-    background: var(--surface-active, #f0f7ff);
-    border-left: 4px solid var(--primary, #007bff);
+    background: var(--bg-accent);
+    /* Adding a subtle glow effect with your primary blue */
+    box-shadow: inset 4px 0 0 0 var(--bg-primary);
 
-    // Hide chevron when active to keep it clean
     .chevron {
       display: none;
+    }
+    
+    h3 {
+      color: var(--text-white);
     }
   }
 `;
@@ -81,39 +85,45 @@ const ItemContainer = styled.div`
   gap: 16px;
   padding: 20px 24px;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: all 0.2s ease;
   position: relative;
 
   &:hover {
-    background: var(--surface, #f9fafb);
+    background: var(--bg-dark);
+    
+    .chevron {
+      opacity: 1;
+      transform: translateX(4px);
+    }
   }
 `;
 
 const LogoContainer = styled.div`
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
 `;
 
 const Logo = styled.img`
   width: 100%;
   height: 100%;
-  border-radius: 6px;
+  border-radius: 8px;
   object-fit: cover;
+  border: 1px solid var(--border-main);
 `;
 
 const LogoPlaceholder = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: 6px;
-  background: var(--surface, #f0f0f0);
-  color: var(--muted, #666);
+  border-radius: 8px;
+  background: var(--bg-dark);
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 14px;
-  border: 1px solid var(--border, #eee);
+  font-size: 16px;
+  border: 1px solid var(--border-main);
 `;
 
 const Content = styled.div`
@@ -129,72 +139,77 @@ const TopRow = styled.div`
 `;
 
 const Title = styled.h3`
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 700;
-  color: var(--black, #111);
+  color: var(--text-sub);
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  transition: color 0.2s;
 `;
 
 const SourceTag = styled.span`
   font-size: 9px;
   font-weight: 800;
-  color: var(--muted, #999);
+  color: var(--text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
+  background: var(--bg-dark);
+  padding: 2px 6px;
+  border-radius: 4px;
 `;
 
 const MetaRow = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-  color: var(--muted, #666);
-  margin-bottom: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
 `;
 
 const CompanyName = styled.span`
   font-weight: 500;
+  color: var(--text-sub);
 `;
 
 const Separator = styled.span`
-  color: var(--border, #eee);
+  color: var(--border-dim);
 `;
 
 const Location = styled.span`
-  color: var(--grey, #888);
+  color: var(--text-muted);
 `;
 
 const RemoteBadge = styled.span`
   font-size: 10px;
   font-weight: 700;
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.1);
-  padding: 1px 6px;
-  border-radius: 4px;
+  color: var(--bg-primary);
+  background: var(--bg-accent);
+  padding: 2px 8px;
+  border-radius: 12px;
   margin-left: 4px;
 `;
 
 const TagList = styled.div`
   display: flex;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
 `;
 
 const HashTag = styled.span`
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--primary, #007bff);
-  opacity: 0.8;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-lavender);
+  background: rgba(158, 158, 255, 0.1);
+  padding: 1px 4px;
+  border-radius: 4px;
 `;
 
 const ChevronIcon = styled.div`
   align-self: center;
-  color: var(--border, #ccc);
+  color: var(--text-muted);
   opacity: 0;
-  transition: opacity 0.2s;
-  ${ItemContainer}:hover & {
-    opacity: 1;
-  }
+  transition: all 0.2s;
 `;

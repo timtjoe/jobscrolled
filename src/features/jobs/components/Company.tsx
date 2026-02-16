@@ -3,124 +3,114 @@ import styled from "styled-components";
 import { Icons } from "@/components/icons";
 import type { JobContract } from "@/types/jobs";
 
-interface IProps {
-  details: JobContract;
-}
-
-export const Company: React.FC<IProps> = ({ details }) => {
-  const handleApply = () => {
-    window.open(details.url, "_blank", "noopener,noreferrer");
-  };
-
+export const Company: React.FC<{ details: JobContract }> = ({ details }) => {
   return (
     <Container>
-      <Header>
-        <Logo>
-          {details.logo ? (
-            <Image src={details.logo} alt={details.company} />
-          ) : (
-            <Fallback>{details.company.charAt(0)}</Fallback>
-          )}
-        </Logo>
+      <Circle>
+        {details.logo ? (
+          <img src={details.logo} alt="" />
+        ) : (
+          details.company.charAt(0)
+        )}
+      </Circle>
 
+      <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <Name>{details.company}</Name>
         <Meta>
-          <Name>{details.company}</Name>
-          <Location>
-            <Icons.map_pin size={12} />
-            {details.location}
-          </Location>
+          <Icons.map_pin size={14} /> {details.location}
         </Meta>
-      </Header>
+        <Meta>
+          <Icons.briefcase size={14} /> {details.isRemote ? "Remote" : "On-site"}
+        </Meta>
+      </div>
 
-      <Column>
-        <Button onClick={handleApply}>
-          Apply Now
-          <Icons.external size={16} />
-        </Button>
-        <Text>via {details.source}</Text>
-      </Column>
+      <Footer>
+        <Btn onClick={() => window.open(details.url, "_blank", "noopener,noreferrer")}>
+          Apply Now <Icons.external size={14} />
+        </Btn>
+        <Source>via {details.source}</Source>
+      </Footer>
     </Container>
   );
 };
 
-// Styles remain the same
-const Container = styled.div`
-  padding: 24px;
-  background: var(--surface);
-  border-radius: 12px;
-  border: 1px solid var(--border);
-`;
-const Header = styled.div`
+const Container = styled.aside`
+  width: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 24px;
+  padding: 24px 0;
+  background: var(--bg-black);
+  color: var(--text-muted);
 `;
-const Logo = styled.div`
-  width: 64px;
-  height: 64px;
-  flex-shrink: 0;
-`;
-const Image = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 12px;
-  background: #fff;
-  border: 1px solid var(--border);
-`;
-const Fallback = styled.div`
-  width: 100%;
-  height: 100%;
-  background: var(--black);
-  color: #fff;
+
+const Circle = styled.div`
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  border: 1px solid var(--border-main);
+  background: var(--bg-dark);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
-  font-weight: 700;
-  border-radius: 12px;
-`;
-const Meta = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-const Name = styled.h2`
-  font-size: 18px;
+  font-size: 28px;
   font-weight: 800;
-  color: var(--black);
-  margin: 0;
+  color: var(--text-white);
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: white;
+    padding: 4px;
+  }
 `;
-const Location = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  color: var(--muted);
+
+const Name = styled.h2`
+  font-size: var(--font-xm, 17px);
+  color: var(--text-white);
+  margin: 0 0 8px;
 `;
-const Column = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-`;
-const Button = styled.button`
-  width: 100%;
-  background: var(--black);
-  color: #fff;
-  padding: 14px;
-  border-radius: 10px;
-  font-weight: 700;
-  cursor: pointer;
+
+const Meta = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  font-size: var(--font-sm, 14px);
+  margin-top: 4px;
 `;
-const Text = styled.span`
-  font-size: 11px;
-  text-align: center;
-  color: var(--muted);
+
+const Footer = styled.div`
+  width: 100%;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-dim);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+`;
+
+const Btn = styled.button`
+  background: var(--bg-primary);
+  color: var(--text-white);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: var(--font-xs, 13px);
   font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  &:hover { filter: brightness(1.1); }
+  &:active { transform: scale(0.96); }
+`;
+
+const Source = styled.span`
+  font-size: 10px;
   text-transform: uppercase;
+  letter-spacing: 1px;
 `;
