@@ -60,19 +60,18 @@ export const JobCard: React.FC<JobCardProps> = ({ job }) => {
 /* --- STYLES --- */
 
 const Card = styled(NavLink)`
-min-height: 100px;
+  min-height: 100px;
   text-decoration: none;
   display: block;
   background: var(--bg-black);
   border-bottom: 1px solid var(--border-dim);
-  transition: background 0.15s ease;
+  transition: background-color 0.15s ease;
 
   &:hover {
-    background: var(--bg-dark);
+    background-color: var(--bg-dark);
   }
   &.active {
     background: var(--bg-accent);
-    box-shadow: inset 4px 0 0 0 var(--bg-primary);
     h3 {
       color: var(--text-white);
     }
@@ -81,36 +80,37 @@ min-height: 100px;
 
 const Item = styled.div`
   display: flex;
-  gap: 14px;
-  padding: 16px 20px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
 `;
 
 const LogoWrap = styled.div`
-  width: 40px;
-  height: 40px;
+  width: 41px;
+  height: 39px;
   flex-shrink: 0;
+  overflow: hidden;
+  border-radius: 2px;
+  font-weight: 700;
+  font-size: 30px;
 `;
 
 const Logo = styled.img`
   width: 100%;
   height: 100%;
-  border-radius: 6px;
   object-fit: cover;
-  border: 1px solid var(--border-main);
-  background: white; /* Helpful for transparent PNG logos */
+  background: var(--bg-accent);
 `;
 
 const Placeholder = styled.div`
   width: 100%;
   height: 100%;
-  border-radius: 6px;
+  border-radius: 2px;
   color: var(--text-white);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 16px;
-  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  font-size: var(--font-xl);
 `;
 
 const Content = styled.div`
@@ -119,10 +119,11 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 2px;
+  overflow: hidden;
 `;
 
 const Title = styled.h3`
-  font-size: 14px;
+  font-size: var(--font-sm);
   line-height: 16px;
   font-weight: 700;
   color: var(--text-sub);
@@ -133,22 +134,21 @@ const Title = styled.h3`
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  text-wrap: wrap;
 `;
 
 const MetaRow = styled.div`
   display: flex;
   align-items: center;
-  font-size: 13px;
-  line-height: 16px;
+  font-size: var(--font-xs);
+  line-height: 20px;
   color: var(--text-muted);
   width: 100%;
+  overflow: hidden;
 `;
 
 const CompanyName = styled.span`
   color: var(--text-sub);
-  font-weight: 500;
+  font-weight: normal;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -165,13 +165,20 @@ const Location = styled.span`
 const PerksRow = styled.div`
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: var(--font-xs);
   line-height: 16px;
   margin-top: 2px;
   color: var(--text-muted);
 
+  width: 100%;
+  overflow: hidden;
+
   .salary {
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
   }
 `;
 

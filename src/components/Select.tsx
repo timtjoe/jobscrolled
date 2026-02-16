@@ -80,7 +80,7 @@ export const Select: React.FC<IProps> = ({
 
 const Container = styled.div`
   position: relative;
-  width: fit-content; /* Not full width anymore */
+  width: fit-content; 
   min-width: 140px;
   font-size: var(--font-sm);
 `;
@@ -90,12 +90,12 @@ const Trigger = styled.div<{ $active: boolean }>`
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-sm);
-  padding: 8px 16px; /* Small button size */
-  background: none;
-  border-radius: var(--radius-lg); /* Rounded pill style */
+  padding: 8px var(--spacing-xs); 
+  background: var(--bg-black);
+  border-radius: var(--radius-lg); 
   border: thin solid var(--border-dim);
   cursor: pointer;
-  font-weight: 700; /* Bolder text */
+  font-weight: 700; 
   color: ${(p) => (p.$active ? "var(--text-white)" : "var(--text-sub)")};
 `;
 

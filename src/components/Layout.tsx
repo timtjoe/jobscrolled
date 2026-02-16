@@ -29,8 +29,9 @@ const Container = styled.div`
   overflow: hidden;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    height: auto; /* Allow window to scroll */
+    grid-template-columns: 100%;
+    height: auto;
+    /* REMOVED overflow-x: hidden to restore sticky */
     overflow: visible; 
   }
 `;
@@ -43,11 +44,10 @@ const Pane = styled.aside<{ $hideOnMobile: boolean }>`
   @media (max-width: 768px) {
     display: ${(p) => (p.$hideOnMobile ? "none" : "block")};
     height: auto;
-    overflow-y: visible; /* CRITICAL: Sticky won't work if this is hidden or auto */
+    /* CRITICAL: Must be visible for position: sticky to work */
+    overflow: visible; 
   }
 `;
-
-
 const Main = styled.main<{ $showOnMobile: boolean }>`
   height: 100%;
   overflow-y: auto; /* This is the ONLY scrollbar for the right side */

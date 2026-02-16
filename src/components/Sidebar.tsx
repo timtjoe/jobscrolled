@@ -24,8 +24,8 @@ export const Sidebar: React.FC = () => {
       <HeaderGroup>
         <Logo>
           <NavLink to={"/"}>
-          <img src={logo_sm} alt="Logo" className="mobile-logo" />
-          <img src={logo_lg} alt="Company Logo" className="desktop-logo" />
+            <img src={logo_sm} alt="Logo" className="mobile-logo" />
+            <img src={logo_lg} alt="Company Logo" className="desktop-logo" />
           </NavLink>
         </Logo>
 
@@ -54,32 +54,34 @@ const Container = styled.aside`
   flex-direction: column;
   gap: var(--spacing-sm);
   padding-bottom: var(--spacing-md);
-  background: var(--bg-black);
   height: fit-content;
   border-bottom: thin solid var(--border-dim);
+  background: var(--bg-overlay);
+  backdrop-filter: blur(12px);
 
   @media (max-width: 768px) {
     width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
   }
 `;
 
 const HeaderGroup = styled.div`
-  display: contents; /* Behaves as if children are direct children of Container on desktop */
+  display: contents;
+  padding: 0 var(--spacing-sm);
+  padding-top: var(--spacing-sm);
 
   @media (max-width: 768px) {
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: var(--spacing-xs);
-    margin-bottom: var(--spacing-xs);
+    gap: var(--spacing-xs)
   }
 `;
 
 const Logo = styled.div`
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.911);
+  background: var(--bg-overlay);
   backdrop-filter: blur(16px) saturate(150%);
   -webkit-backdrop-filter: blur(16px) saturate(150%);
 
@@ -96,9 +98,9 @@ const Logo = styled.div`
   }
 
   @media (max-width: 768px) {
-    width: 42px;
-    height: 42px;
-    border-radius: var(--radius-md);
+    width: 58px;
+    height: 58px;
+    border-radius: var(--radius-lg);
     justify-content: center;
     padding: 6px;
 
@@ -132,7 +134,7 @@ const SearchBox = styled.div`
   @media (max-width: 768px) {
     margin: 0;
     flex: 1;
-    height: 42px;
+    margin: 0;
   }
 `;
 

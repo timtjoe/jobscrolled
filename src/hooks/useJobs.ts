@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { JobRepository } from "@/repository/job.repo";
 import type { JobFilters } from "@/types/jobs";
 
@@ -12,17 +12,27 @@ export function useJobs(filters: JobFilters) {
     queryKey: jobKeys.list(filters),
     queryFn: () => JobRepository.getAll(),
     staleTime: 1000 * 60 * 5,
+    
+    /**
+     * FEATURE: Keep Previous Data
+     * This prevents the 'data' object from becoming 'undefined' when filters.pageSize 
+     * changes, which stops the scroll-snapping and UI flickering.
+     */
+    placeholderData: keepPreviousData, 
+
     select: (data) => {
       let processed = [...data];
 
       // Filtering logic
       if (filters.source)
         processed = processed.filter((j) => j.source === filters.source);
+      
       if (filters.type !== "all") {
         processed = processed.filter((j) =>
           filters.type === "remote" ? j.isRemote : !j.isRemote,
         );
       }
+      
       if (filters.search) {
         const q = filters.search.toLowerCase();
         processed = processed.filter(

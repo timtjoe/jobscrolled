@@ -9,25 +9,27 @@ import { JobSkeleton } from "@/components/Skeleton";
 
 const ListContent: React.FC = () => {
   const [filters, setFilters] = useAtom(withJob.filters);
-  const { data, isLoading, isError, refetch } = useJobs(filters);
+  const { data, isLoading, isError, refetch, isFetching } = useJobs(filters);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  const { data: jobList = [], total = 0 } = data || {};
+  const jobList = data?.data || [];
+  const total = data?.total || 0;
   const hasMore = jobList.length < total;
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
       const [target] = entries;
-      if (target?.isIntersecting && hasMore && !isLoading) {
+      // We check isFetching to prevent firing 5 requests at once
+      if (target?.isIntersecting && hasMore && !isFetching) {
         setFilters((prev) => ({ ...prev, pageSize: prev.pageSize + 15 }));
       }
     },
-    [hasMore, isLoading, setFilters],
+    [hasMore, isFetching, setFilters],
   );
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
-      rootMargin: "200px",
+      rootMargin: "600px", // High margin so it loads before user sees the end
     });
     if (loaderRef.current) observer.observe(loaderRef.current);
     return () => observer.disconnect();
@@ -35,56 +37,54 @@ const ListContent: React.FC = () => {
 
   if (isError) return <TechnicalError onRetry={() => refetch()} />;
 
+  // Initial Load State (Only when absolutely no data exists)
+  if (isLoading && jobList.length === 0) {
+    return <JobSkeleton count={4} />;
+  }
+
   return (
     <>
       <List>
-        {jobList.map((job) => (
+        {jobList.map((job: any) => (
           <JobCard key={job.id} job={job} />
         ))}
-
+        
         {!isLoading && jobList.length === 0 && (
           <EmptyState>No jobs found matching your criteria.</EmptyState>
         )}
       </List>
 
+      {/* This ref is always at the bottom */}
       <ObserverTarget ref={loaderRef}>
-        {isLoading && <JobSkeleton count={5} />}
+        {isFetching && jobList.length > 0 && (
+          <div style={{ padding: '20px' }}>
+             <JobSkeleton count={2} />
+          </div>
+        )}
       </ObserverTarget>
     </>
   );
 };
 
-export const JobList: React.FC = () => {
-  const [filters] = useAtom(withJob.filters);
-  const { isLoading } = useJobs(filters);
-
-  return (
-    <Container $isLoading={isLoading}>
-      <ListContent />
-    </Container>
-  );
-};
+export const JobList: React.FC = () => (
+  <Container>
+    <ListContent />
+  </Container>
+);
 
 /* --- STYLES --- */
 
-const Container = styled.div<{ $isLoading?: boolean }>`
+const Container = styled.div`
   width: 100%;
   background: var(--bg-black);
-
-  ${(p) =>
-    p.$isLoading &&
-    `
-    height: 100vh;
-    overflow: hidden;
-    pointer-events: none;
-  `}
 `;
 
 const List = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 100vw; 
 `;
-
 const EmptyState = styled.div`
   padding: 40px 24px;
   text-align: center;
@@ -94,6 +94,6 @@ const EmptyState = styled.div`
 `;
 
 const ObserverTarget = styled.div`
-  padding: 20px;
   min-height: 100px;
+  width: 100%;
 `;
