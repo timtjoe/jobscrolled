@@ -1,6 +1,38 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
+## [1.0.0](https://github.com/timtjoe/jobscrolled/compare/v0.5.0...v1.0.0) (2026-02-17)
+
+
+### Features
+
+*  redesigned sidebar/pane and add filter and logo ([6bc91c7](https://github.com/timtjoe/jobscrolled/commit/6bc91c7594af908967ee350e4348e833586a35fa))
+* add color and font var ([9e3d335](https://github.com/timtjoe/jobscrolled/commit/9e3d3359370fb7564913847962a43efed6253d61))
+* add site footer ([0732d80](https://github.com/timtjoe/jobscrolled/commit/0732d8055008a9f1e4985a0e68eef64c780826b3))
+* add suggestion componenent ([acc2a0b](https://github.com/timtjoe/jobscrolled/commit/acc2a0bd89e89cbf8ec1be3dbd297bf4ee3b2270))
+* change layout and add ui components ([23fdace](https://github.com/timtjoe/jobscrolled/commit/23fdace21078a6a2503abd682b721b14be20b339))
+* Change logo on mobile and update sidebar styles ([712a0cd](https://github.com/timtjoe/jobscrolled/commit/712a0cde42bfdb698ebce1e0d9cef2b230a15fa4))
+* change ui and add filter select ([797f7ee](https://github.com/timtjoe/jobscrolled/commit/797f7eea5af3c8067c28970d2e6f4609f6cb2ccf))
+* improve component UI ([b153588](https://github.com/timtjoe/jobscrolled/commit/b15358860f71928c15816babb2091e13eb030853))
+
+
+### Bug Fixes
+
+* add missing types ([f1590f4](https://github.com/timtjoe/jobscrolled/commit/f1590f45465a518417906773a2beb95a6880f872))
+* fix layout messiness on mobile ([25ddfd2](https://github.com/timtjoe/jobscrolled/commit/25ddfd249e3208712879a5f4a00afd4d3e75e8a0))
+* reduce footer text: ([4a770e0](https://github.com/timtjoe/jobscrolled/commit/4a770e0daff54aa5b6247543e446623aacb843ee))
+* remove unused declarations ([ee7ddda](https://github.com/timtjoe/jobscrolled/commit/ee7ddda01abdc306fb4a773daa29bdd99d6079a1))
+* remove unused import ([ea8ce30](https://github.com/timtjoe/jobscrolled/commit/ea8ce30ffd6609a2ac91b55b1b190b34e98250d3))
+* triggle actions ([23a9029](https://github.com/timtjoe/jobscrolled/commit/23a9029e2662f3971145af26b622287e55fd954d))
+* unused import ([7a9f94d](https://github.com/timtjoe/jobscrolled/commit/7a9f94d7b877819a5dc089ceee2d8c809be0622b))
+
+
+### Miscellaneous
+
+* add demo video ([482d81f](https://github.com/timtjoe/jobscrolled/commit/482d81f0a0da4b5742c22a425ea30c690b273c75))
+* Add social proof image to readme ([f2dbbbe](https://github.com/timtjoe/jobscrolled/commit/f2dbbbe6f8f4b8de712973b9148ece3ef96de05a))
+* improve readme page content ([53fc8df](https://github.com/timtjoe/jobscrolled/commit/53fc8dfd52180bde311e91b5aec5609dd0a297d0))
+
 ## [0.5.0](https://github.com/timtjoe/jobscrolled/compare/v0.4.1...v0.5.0) (2026-02-16)
 
 
