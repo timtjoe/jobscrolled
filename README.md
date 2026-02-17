@@ -1,54 +1,64 @@
 # JobScrolled
 
 ### About JobScrolled
-Finding remote work can be a nightmare, especially for developers outside of Europe or North America. Many platforms filter out "worldwide" listings because their primary user base isn't looking for them. **JobScrolled** was built to bridge this gap, prioritizing high-quality, worldwide remote frontend roles that offer the same perks and credibility as regional listings.
-
-Beyond a polished interface, JobScrolled is a "worldwide-first" platform. It empowers everyone—regardless of location—to tap into the vast global repository of remote and digital nomad opportunities.
-
-#### 🤖 Agentic AI Features [COMING SOON]
-Stop wasting hours on repetitive tasks. JobScrolled uses Agentic AI to streamline your hustle:
-* **One-Click Customization:** Upload a single resume, and our AI tailors it for every specific job.
-* **Smart Applications:** Based on your skills and tech stack, the AI crafts a custom introduction and refines your work experience for each submission.
-* **Auto-Apply:** Simply click "Apply" on a job card, and the system sends a personalized application on your behalf.
+Finding remote work can be a nightmare for developers outside of Europe or North America. **JobScrolled** is a "worldwide-first" platform built to bridge this gap, prioritizing high-quality, global remote frontend roles. It aggregates data into a high-performance, visually polished interface designed for the modern digital nomad.
 
 ---
 
-### Why This Project?
-As a frontend engineer, my goal is to create intuitive, satisfying experiences. This project serves as a comprehensive showcase of turning complex API data into a high-performance, visually appealing interface.
+### Design Patterns & Architectural Decisions
 
-Through JobScrolled, I demonstrate mastery in:
-* **Data Orchestration:** Aggregating and styling data from multiple API sources.
-* **Performance:** Implementing advanced caching to ensure a fast, stable UX.
-* **Automation:** Utilizing CI/CD pipelines for seamless deployment and release cycles.
-* **Customization:** Transforming standard UI frameworks into bespoke components.
-* **Code Health:** Using "decluttering" tools to remove unused modules, reducing build sizes and shipping only what’s necessary.
-* **Modern Workflows:** Leveraging monorepos and type-safe languages for scalable, collaborative development.
+To ensure the app is scalable, maintainable, and performant, I implemented several industry-standard design patterns:
+
+#### 1. Adapter Pattern (Data Transformation)
+* **The Problem:** Job data arrives from multiple APIs with inconsistent naming conventions (e.g., `job_title` vs `name`).
+* **The Solution:** I implemented an **Adapter layer** that maps various external API responses into a unified `JobContract` interface. This ensures the UI components never have to worry about where the data came from—they only consume a predictable, type-safe object.
+
+#### 2. Repository Pattern (Data Abstraction)
+* **The Logic:** Instead of components calling APIs directly, they interact with a **Repository**. This layer abstracts the data source, allowing me to switch between local JSON, mock data, or live APIs without changing a single line of UI code. It serves as the "Single Source of Truth."
+
+#### 3. Observer Pattern (Reactive State via Jotai & TanStack)
+* **The Logic:** Using a **Publisher/Subscriber (Pub/Sub)** model, the app maintains a reactive state. When a user changes a filter (Publisher), multiple parts of the app (Subscribers)—like the job list and the Redirector—automatically sync and update without manual re-renders.
+
+#### 4. Master-Detail Pattern (UX Flow)
+* **The Logic:** To optimize the browsing experience on desktop, I used a split-pane view. Users can scroll through a list (Master) while viewing full descriptions (Detail) simultaneously. This eliminates "pogo-sticking" (navigating back and forth between pages) and keeps the user in a continuous discovery flow.
+
+#### 5. Skeleton Screen Pattern (Perceived Performance)
+* **The Logic:** Instead of showing generic spinners, I implemented **Skeleton States** that mimic the layout of the job content. This improves perceived performance by showing users the structure of the page while data is being fetched.
+
+#### 6. Compound Component Pattern
+* **The Logic:** By breaking down complex UI into specialized sub-components (e.g., `MetaRow`, `PerksRow`, `LogoSection`), I created a highly reusable codebase. Each piece handles one specific concern, making the components easier to test and style.
+
+#### 7. Error Boundary Pattern (Resilience)
+* **The Logic:** Critical UI segments are wrapped in **React Error Boundaries**. If a specific job description or suggestion fails to render, the entire app remains stable while providing a graceful fallback UI for the affected section.
 
 ---
 
 ### Tech Stack
-* **TypeScript:** For robust, type-safe application logic.
-* **React:** Creating an interactive, responsive, and intuitive UI.
-* **TanStack Query:** Managing data fetching with speed and zero latency issues.
-* **UnoCSS & Styled Components:** Combining the flexibility of CSS-in-JS with modern utility-first styling.
-* **Motion:** Bringing the interface to life with fluid transitions and animations.
-* **Redux & Jotai:** A dual-layer state approach—Redux for data caching and Jotai for lightweight, secure global app settings.
-* **Knip:** Keeping the codebase lean by identifying and removing unused files and packages.
-* **Turborepo:** Managing a high-performance monorepo for effective scaling.
+* **TypeScript:** Strict type-safety for a self-documenting and robust codebase.
+* **React:** Utilizing hooks and functional components for a declarative, modern UI.
+* **TanStack Query:** Advanced server-state management with built-in caching and background refetching.
+* **Styled Components:** CSS-in-JS for scoped, dynamic styling and clean component hierarchies.
+* **Jotai:** Atomic state management for lightweight and secure global app settings.
+* **Knip:** Employed as a "code health" tool to identify and prune unused modules, keeping the bundle lean.
+
+---
+
+### Performance & Code Health
+* **Tree Shaking:** Optimized build process to ship zero unused code.
+* **Sanitization:** Integrated **DOMPurify** to safely render third-party HTML descriptions, mitigating XSS risks.
+* **Adaptive Layouts:** Custom CSS Grid logic that transforms from a dual-pane desktop view to a mobile-first sticky header experience.
 
 ---
 
 ### About the Developer
-I am a Full-Stack Developer dedicated to crafting modern UIs that feel fast, clean, and intuitive. With **5+ years of experience**, I thrive on the joy that a well-built interface brings to users. 
+I am a **Full-Stack Developer** with **5+ years of experience** obsessed with the intersection of high-fidelity UI and system-level efficiency. While I spend my days orchestrating UI trees and fluid animations, I have a deep-seated love for **low-level programming**. 
 
-Interestingly, my journey into code started with a fascination for Operating Systems. While I love the frontend, I still enjoy delving into low-level programming and OS concepts. I’m always looking for opportunities that allow me to be creative, solve complex problems, and contribute to products that reach a global audience.
+I built this platform as a showcase for high-fidelity frontend engineering. I am currently **open to offers** for Remote-first or Relocation-friendly roles where UI excellence and technical curiosity are prioritized.
 
-## Let's Connect
-If you’re looking for a developer to help shape your user experience and make your product stand out in a crowded market, I’d love to hear from you.
-
+### Let's Connect
 * **Email:** [timtjoe@gmail.com](mailto:timtjoe@gmail.com)
-* **WhatsApp:** [wa.me/+231770934646](https://wa.me/+231770934646)
-* **Facebook:** [fb.com/timtjoe](https://fb.com/timtjoe)
+* **WhatsApp:** [+231 770 934 646](https://wa.me/231770934646)
+* **GitHub:** [github.com/timtjoe](https://github.com/timtjoe)
 
 ---
 *© 2026 Tim T. Joe*
