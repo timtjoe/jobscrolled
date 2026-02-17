@@ -1,7 +1,7 @@
-![JobScrolled Header](./public/social_proof.png)
-
 ### About JobScrolled
 Finding remote work can be a nightmare for developers outside of Europe or North America. **JobScrolled** is a "worldwide-first" platform built to bridge this gap, prioritizing high-quality, global remote frontend roles. It aggregates data into a high-performance, visually polished interface designed for the modern digital nomad.
+
+![JobScrolled Header](./public/social_proof.png)
 
 ---
 
